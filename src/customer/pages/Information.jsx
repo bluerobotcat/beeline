@@ -5,9 +5,7 @@ export default function Information() {
   return (
     <Box sx={{ display: "flex" }}>
       <main>
-        <Typography variant="h1">
-          <Information></Information>
-        </Typography>
+        <Typography variant="h1"></Typography>
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus

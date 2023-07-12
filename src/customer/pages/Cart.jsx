@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Divider, Grid, List, ListItem } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function CartList() {
   return (
@@ -38,7 +39,7 @@ export default function CartList() {
         </List>
 
         <List
-          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+          sx={{ width: "100%", maxWidth: 520, bgcolor: "background.paper" }}
         >
           <ListItem alignItems="flex-start">
             <Grid item container justifyContent="space-between">
@@ -80,6 +81,8 @@ export default function CartList() {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          component={Link}
+          to="/receipt"
         >
           Check Out
         </Button>

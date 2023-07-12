@@ -27,22 +27,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import ContactMailIcon from "@mui/icons-material/ContactMail";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Link, Route, Routes } from "react-router-dom";
 import Routing from "../../Routing";
-import DishSelection from "./DishSelection";
-import Home from "./Home";
-import Menu from "./Menu";
-import CartList from "./Cart";
-import Account from "./Account";
-import Settings from "./Settings";
-import TermsConditions from "./TermsConditions";
-import PrivacyPolicy from "./PrivacyPolicy";
-import VendorSite from "./VendorSite";
-import ContactUs from "./ContactUs";
-import AboutUs from "./AboutUs";
-import Information from "./Information";
 
 const drawerWidth = 240;
 

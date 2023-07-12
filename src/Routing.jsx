@@ -10,22 +10,36 @@ import ContactUs from "./customer/pages/ContactUs";
 import VendorSite from "./customer/pages/VendorSite";
 import PrivacyPolicy from "./customer/pages/PrivacyPolicy";
 import TermsConditions from "./customer/pages/TermsConditions";
+import AccountDashboard from "./customer/pages/Dashboard";
+import ResetPassword from "./customer/pages/ResetPassword";
+import LogIn from "./customer/pages/LogIn";
+import SignUp from "./customer/pages/SignUp";
+import DishSelection from "./customer/pages/DishSelection";
+import Receipt from "./customer/pages/OrderSummary";
 
 export default function Routing() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/menu" element={<Menu />} />
-      <Route path="/cart" element={<CartList />} />
-      <Route path="/account" element={<Account />} />
-      <Route path="/settings" element={<Settings />} />
-      <Route path="/information" element={<Information />} />
-      <Route path="/aboutus" element={<AboutUs />} />
-      <Route path="/contactus" element={<ContactUs />} />
-      <Route path="/vendorsite" element={<VendorSite />} />
-      <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-      <Route path="/termsconditions" element={<TermsConditions />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/cart" element={<CartList />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/information" element={<Information />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/vendorsite" element={<VendorSite />} />
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/termsconditions" element={<TermsConditions />} />
+        <Route path="/dashboard" element={<AccountDashboard />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dishselection" element={<DishSelection />} />
+        <Route path="/receipt" element={<Receipt />} />
+      </Routes>
+    </div>
   );
 }
 

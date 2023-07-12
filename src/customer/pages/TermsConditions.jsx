@@ -5,7 +5,7 @@ export default function TermsConditions() {
   return (
     <Box sx={{ display: "flex" }}>
       <main>
-        <Typography variant="h1">Privacy Policy</Typography>
+        <Typography variant="h1">Terms & Conditions</Typography>
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus

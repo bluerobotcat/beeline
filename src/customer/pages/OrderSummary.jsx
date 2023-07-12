@@ -184,14 +184,6 @@ export default function Receipt() {
             We hope to see you soon!
           </Typography>
         </List>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Check Out
-        </Button>
       </Box>
     </Container>
   );

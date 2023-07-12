@@ -15,10 +15,14 @@ import {
   Typography,
 } from "@mui/material";
 import food1 from "../images/food1.jpg";
+import { Link } from "react-router-dom";
 
 export default function DishSelection(props) {
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("Base Price ($10)");
+  const [mainIngredientOne, setMainIngredientOne] = useState(false);
+  const [mainIngredientTwo, setMainIngredientTwo] = useState(false);
+  const [mainIngredientThree, setMainIngredientThree] = useState(false);
   const [addOnsOne, setAddOnsOne] = useState(false);
   const [addOnsTwo, setAddOnsTwo] = useState(false);
   const [addOnsThree, setAddOnsThree] = useState(false);
@@ -29,6 +33,18 @@ export default function DishSelection(props) {
 
   const handleSizeChange = (event) => {
     setSize(event.target.value);
+  };
+
+  const handleMainIngredientOneChange = (event) => {
+    setMainIngredientOne(event.target.checked);
+  };
+
+  const handleMainIngredientTwoChange = (event) => {
+    setMainIngredientTwo(event.target.checked);
+  };
+
+  const handleMainIngredientThreeChange = (event) => {
+    setMainIngredientThree(event.target.checked);
   };
 
   const handleAddOnsOneChange = (event) => {
@@ -58,17 +74,30 @@ export default function DishSelection(props) {
     price = 14;
   }
 
+  let mainIngredientPrice = 0;
+  if (mainIngredientOne) {
+    mainIngredientPrice += 1;
+  }
+
+  if (mainIngredientTwo) {
+    mainIngredientPrice += 2;
+  }
+
+  if (mainIngredientThree) {
+    mainIngredientPrice += 3;
+  }
+
   let addOnsPrice = 0;
   if (addOnsOne) {
-    addOnsPrice += 2;
+    addOnsPrice += 1;
   }
 
   if (addOnsTwo) {
-    addOnsPrice += 3;
+    addOnsPrice += 2;
   }
 
   if (addOnsThree) {
-    addOnsPrice += 4;
+    addOnsPrice += 3;
   }
 
   let totalPrice = price + addOnsPrice;
@@ -90,9 +119,12 @@ export default function DishSelection(props) {
             Dish A Description - Includes xxx for portion size. Pick in the
             comfort of your home.
           </Typography>
+          <div />
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <Grid item xs={12}>
+              <FormControl
+                sx={{ m: 1, display: "flex", flexDirection: "column" }}
+              >
                 <InputLabel id="size-select-label">Size</InputLabel>
                 <Select
                   labelId="size-select-label"
@@ -106,19 +138,46 @@ export default function DishSelection(props) {
                   <MenuItem value={"Kids ($8)"}>Kids ($8)</MenuItem>
                   <MenuItem value={"Small ($12)"}>Small ($12)</MenuItem>
                   <MenuItem value={"Large ($15)"}>Large ($15)</MenuItem>
-                  <MenuItem value={"Main Ingredient One ($11)"}>
-                    Main Ingredient One ($11)
-                  </MenuItem>
-                  <MenuItem value={"Main Ingredient Two ($13)"}>
-                    Main Ingredient Two ($13)
-                  </MenuItem>
-                  <MenuItem value={"Main Ingredient Three ($14)"}>
-                    Main Ingredient Three ($14)
-                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
+              <FormControl component="fieldset">
+                <Typography variant="subtitle1" color="text.secondary">
+                  Main Ingredient
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={mainIngredientOne}
+                        onChange={handleMainIngredientOneChange}
+                      />
+                    }
+                    label="Main Ingredient One (+$0)"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={mainIngredientTwo}
+                        onChange={handleMainIngredientTwoChange}
+                      />
+                    }
+                    label="Main Ingredient Two (+$2)"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={mainIngredientThree}
+                        onChange={handleMainIngredientThreeChange}
+                      />
+                    }
+                    label="Main Ingredient Three (+$3)"
+                  />
+                </Box>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1" color="text.secondary">
                   Add-Ons:
@@ -131,7 +190,7 @@ export default function DishSelection(props) {
                         onChange={handleAddOnsOneChange}
                       />
                     }
-                    label="Add-Ons One"
+                    label="Add-Ons One (+$1)"
                   />
                   <FormControlLabel
                     control={
@@ -140,7 +199,7 @@ export default function DishSelection(props) {
                         onChange={handleAddOnsTwoChange}
                       />
                     }
-                    label="Add-Ons Two"
+                    label="Add-Ons Two (+$1)"
                   />
                   <FormControlLabel
                     control={
@@ -149,28 +208,46 @@ export default function DishSelection(props) {
                         onChange={handleAddOnsThreeChange}
                       />
                     }
-                    label="Add-Ons Three"
+                    label="Add-Ons Three (+$1.50)"
                   />
                 </Box>
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="quantity-select-label">Quantity</InputLabel>
-                <Select
-                  labelId="quantity-select-label"
-                  id="quantity-select"
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                >
-                  {[...Array(10).keys()].map((i) => (
-                    <MenuItem key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </MenuItem>
-                  ))}
-                </Select>
+              <FormControl
+                sx={{ m: 1, display: "flex", flexDirection: "column" }}
+              >
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <InputLabel id="quantity-select-label">Quantity</InputLabel>
+                  <Select
+                    labelId="quantity-select-label"
+                    id="quantity-select"
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                  >
+                    {[...Array(10).keys()].map((i) => (
+                      <MenuItem key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
               </FormControl>
-              <Button variant="contained">ADD TO CART</Button>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  fontWeight="bold"
+                  sx={{ textAlign: "center" }}
+                >
+                  Total Price: ${totalPrice.toFixed(2)}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Button component={Link} to="/cart" variant="contained">
+                  ADD TO CART
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </CardContent>

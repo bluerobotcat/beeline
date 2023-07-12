@@ -9,6 +9,7 @@ import {
   Grid,
 } from "@mui/material";
 import food1 from "../images/food1.jpg";
+import { Link } from "react-router-dom";
 
 export default function DishCard() {
   return (
@@ -37,7 +38,13 @@ export default function DishCard() {
                 <Typography variant="h6" color="text.secondary">
                   $3.50
                 </Typography>
-                <Button variant="contained">Add</Button>
+                <Button
+                  component={Link}
+                  variant="contained"
+                  to="/dishselection"
+                >
+                  Add
+                </Button>
               </Grid>
             </Grid>
           </Grid>
