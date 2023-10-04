@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider } from "@mui/material";
+import { Container, Divider } from "@mui/material";
 import Gallery from "../components/Gallery";
 import StoreNav from "./StoreNav";
 import { Link } from "react-router-dom";

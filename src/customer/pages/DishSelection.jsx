@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -14,112 +14,104 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import food1 from "../images/food1.jpg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import food1 from "../images/food1.jpg"; // you should have this image in your project
 
-export default function DishSelection(props) {
+export default function DishSelection() {
+  const location = useLocation();
+  const dish = location.state
+    ? location.state.dish
+    : {
+        name: "Dish A",
+        description: "Dish A Description",
+        image: food1,
+        basePrice: 10,
+        sizes: [
+          { name: "Kids", price: 8 },
+          { name: "Small", price: 12 },
+          { name: "Large", price: 15 },
+        ],
+        mainIngredients: [
+          { name: "Ingredient One", price: 0 },
+          { name: "Ingredient Two", price: 2 },
+          { name: "Ingredient Three", price: 3 },
+        ],
+        addOns: [
+          { name: "Add-Ons One", price: 1 },
+          { name: "Add-Ons Two", price: 1 },
+          { name: "Add-Ons Three", price: 1.5 },
+        ],
+      };
+
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState("Base Price ($10)");
-  const [mainIngredientOne, setMainIngredientOne] = useState(false);
-  const [mainIngredientTwo, setMainIngredientTwo] = useState(false);
-  const [mainIngredientThree, setMainIngredientThree] = useState(false);
-  const [addOnsOne, setAddOnsOne] = useState(false);
-  const [addOnsTwo, setAddOnsTwo] = useState(false);
-  const [addOnsThree, setAddOnsThree] = useState(false);
-
-  const handleQuantityChange = (event) => {
-    setQuantity(event.target.value);
-  };
+  const [size, setSize] = useState(dish.basePrice);
+  const [selectedMainIngredients, setSelectedMainIngredients] = useState([]);
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
 
   const handleSizeChange = (event) => {
     setSize(event.target.value);
   };
 
-  const handleMainIngredientOneChange = (event) => {
-    setMainIngredientOne(event.target.checked);
+  const handleMainIngredientChange = (idx) => {
+    setSelectedMainIngredients((prevState) =>
+      prevState.includes(idx)
+        ? prevState.filter((i) => i !== idx)
+        : [...prevState, idx]
+    );
   };
 
-  const handleMainIngredientTwoChange = (event) => {
-    setMainIngredientTwo(event.target.checked);
+  const handleAddOnsChange = (idx) => {
+    setSelectedAddOns((prevState) =>
+      prevState.includes(idx)
+        ? prevState.filter((i) => i !== idx)
+        : [...prevState, idx]
+    );
   };
 
-  const handleMainIngredientThreeChange = (event) => {
-    setMainIngredientThree(event.target.checked);
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
   };
 
-  const handleAddOnsOneChange = (event) => {
-    setAddOnsOne(event.target.checked);
-  };
-
-  const handleAddOnsTwoChange = (event) => {
-    setAddOnsTwo(event.target.checked);
-  };
-
-  const handleAddOnsThreeChange = (event) => {
-    setAddOnsThree(event.target.checked);
-  };
-
-  let price = 10;
-  if (size === "Kids ($8)") {
-    price = 8;
-  } else if (size === "Small ($12)") {
-    price = 12;
-  } else if (size === "Large ($15)") {
-    price = 15;
-  } else if (size === "Main Ingredient One ($11)") {
-    price = 11;
-  } else if (size === "Main Ingredient Two ($13)") {
-    price = 13;
-  } else if (size === "Main Ingredient Three ($14)") {
-    price = 14;
-  }
-
-  let mainIngredientPrice = 0;
-  if (mainIngredientOne) {
-    mainIngredientPrice += 1;
-  }
-
-  if (mainIngredientTwo) {
-    mainIngredientPrice += 2;
-  }
-
-  if (mainIngredientThree) {
-    mainIngredientPrice += 3;
-  }
-
-  let addOnsPrice = 0;
-  if (addOnsOne) {
-    addOnsPrice += 1;
-  }
-
-  if (addOnsTwo) {
-    addOnsPrice += 2;
-  }
-
-  if (addOnsThree) {
-    addOnsPrice += 3;
-  }
-
-  let totalPrice = price + addOnsPrice;
+  const totalPrice =
+    size +
+    selectedMainIngredients.reduce(
+      (acc, idx) => acc + dish.mainIngredients[idx].price,
+      0
+    ) +
+    selectedAddOns.reduce((acc, idx) => acc + dish.addOns[idx].price, 0);
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Card sx={{ maxWidth: "500px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        minHeight: "100vh",
+        py: 3,
+      }}
+    >
+      <Card
+        sx={{
+          maxWidth: "500px",
+          width: "100%",
+          mx: "auto",
+          my: 2,
+          boxShadow: 3,
+        }}
+      >
         <CardMedia
           component="img"
-          sx={{ width: "100%" }}
-          image={food1}
-          alt="Dish A"
+          sx={{ width: "100%", maxHeight: "300px", objectFit: "cover" }}
+          image={dish.image}
+          alt={dish.name}
         />
         <CardContent>
           <Typography variant="h5" component="div">
-            Dish A
+            {dish.name}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Dish A Description - Includes xxx for portion size. Pick in the
-            comfort of your home.
+            {dish.description}
           </Typography>
-          <div />
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <FormControl
@@ -132,12 +124,14 @@ export default function DishSelection(props) {
                   value={size}
                   onChange={handleSizeChange}
                 >
-                  <MenuItem value={"Base Price ($10)"}>
-                    Base Price ($10)
+                  <MenuItem value={dish.basePrice}>
+                    Base Price (${dish.basePrice})
                   </MenuItem>
-                  <MenuItem value={"Kids ($8)"}>Kids ($8)</MenuItem>
-                  <MenuItem value={"Small ($12)"}>Small ($12)</MenuItem>
-                  <MenuItem value={"Large ($15)"}>Large ($15)</MenuItem>
+                  {dish.sizes.map((size, idx) => (
+                    <MenuItem key={idx} value={size.price}>
+                      {size.name} (${size.price})
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -147,69 +141,37 @@ export default function DishSelection(props) {
                   Main Ingredient
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={mainIngredientOne}
-                        onChange={handleMainIngredientOneChange}
-                      />
-                    }
-                    label="Main Ingredient One (+$0)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={mainIngredientTwo}
-                        onChange={handleMainIngredientTwoChange}
-                      />
-                    }
-                    label="Main Ingredient Two (+$2)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={mainIngredientThree}
-                        onChange={handleMainIngredientThreeChange}
-                      />
-                    }
-                    label="Main Ingredient Three (+$3)"
-                  />
+                  {dish.mainIngredients.map((ingredient, idx) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedMainIngredients.includes(idx)}
+                          onChange={() => handleMainIngredientChange(idx)}
+                        />
+                      }
+                      label={`${ingredient.name} (+$${ingredient.price})`}
+                    />
+                  ))}
                 </Box>
               </FormControl>
             </Grid>
             <Grid item xs={12}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1" color="text.secondary">
-                  Add-Ons:
+                  Add-Ons
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={addOnsOne}
-                        onChange={handleAddOnsOneChange}
-                      />
-                    }
-                    label="Add-Ons One (+$1)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={addOnsTwo}
-                        onChange={handleAddOnsTwoChange}
-                      />
-                    }
-                    label="Add-Ons Two (+$1)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={addOnsThree}
-                        onChange={handleAddOnsThreeChange}
-                      />
-                    }
-                    label="Add-Ons Three (+$1.50)"
-                  />
+                  {dish.addOns.map((addOn, idx) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedAddOns.includes(idx)}
+                          onChange={() => handleAddOnsChange(idx)}
+                        />
+                      }
+                      label={`${addOn.name} (+$${addOn.price})`}
+                    />
+                  ))}
                 </Box>
               </FormControl>
             </Grid>
@@ -240,7 +202,7 @@ export default function DishSelection(props) {
                   fontWeight="bold"
                   sx={{ textAlign: "center" }}
                 >
-                  Total Price: ${totalPrice.toFixed(2)}
+                  Total Price: ${(totalPrice * quantity).toFixed(2)}
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
