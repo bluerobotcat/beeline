@@ -1,12 +1,12 @@
 import React from "react";
-import Footer from "./customer/components/Footer";
-import MainLayout from "./customer/pages/TwoSidedDrawer";
+import VendorMain from "./vendor/VendorMain";
+// import CustomerMain from "./customer/CustomerMain";
 
 export default function App() {
   return (
     <div>
-      <MainLayout />
-      <Footer />
+      {/* <CustomerMain /> */}
+      <VendorMain />
     </div>
   );
 }

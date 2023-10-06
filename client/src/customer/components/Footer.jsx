@@ -2,7 +2,7 @@ import { Grid, ListItemButton, ListItemText, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Footer() {
+export default function VendorFooter() {
   const footerStyles = {
     root: {
       backgroundColor: "#000",
@@ -53,6 +53,26 @@ export default function Footer() {
         </Grid>
       </Grid>
       <Grid align="center">
+        {/* <Typography>
+          Vendor Support: Email: vendorsupport@foodsite.com | Phone:
+          1-800-987-6543
+        </Typography>
+        <Typography>
+          Vendor Dashboard: Access your vendor dashboard | Manage menus and
+          orders
+        </Typography>
+        <Typography>
+          Vendor Policies: Commission Rates | Delivery Guidelines | Vendor Terms
+          of Service
+        </Typography>
+        <Typography>
+          Vendor Onboarding: Become a vendor | Apply to join our platform
+        </Typography>
+        <Typography>
+          Marketing Opportunities: Boost your business with featured listings |
+          Advertise with us
+        </Typography> */}
+
         <Typography
           variant="overline"
           align="center"
