@@ -28,8 +28,6 @@ import VendorSignUp from "./vendor/pages/VendorSignUp";
 import VendorLogIn from "./vendor/pages/VendorLogIn";
 import VendorAccount from "./vendor/pages/VendorAccount";
 import VendorAddNewDish from "./vendor/pages/VendorAddNewDish";
-import VendorEditExistingDish from "./vendor/pages/VendorEditExistingDish";
-import VendorRemoveDish from "./vendor/pages/VendorRemoveDish";
 import VendorTransactions from "./vendor/pages/VendorTransactions";
 
 export default function Routing() {
@@ -52,7 +50,8 @@ export default function Routing() {
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dishselection" element={<DishSelection />} />
+        {/* <Route path="/dishselection" element={<DishSelection />} /> */}
+        <Route path="/dishselection/:itemId" element={<DishSelection />} />
         <Route path="/receipt" element={<Receipt />} />
 
         {/* Vendor */}
@@ -61,8 +60,6 @@ export default function Routing() {
         <Route path="/vendororders" element={<VendorOrders />} />
         <Route path="/vendormenu" element={<VendorMenu />} />
         <Route path="/vendoraddnewdish" element={<VendorAddNewDish />} />
-        <Route path="/vendoreditdish" element={<VendorEditExistingDish />} />
-        <Route path="/vendorremovedish" element={<VendorRemoveDish />} />
         <Route path="/vendorinventory" element={<VendorInventory />} />
         <Route path="/vendoraccount" element={<VendorAccount />} />
         <Route path="/vendoranalytics" element={<VendorAnalytics />} />

@@ -131,11 +131,13 @@ export default function CustomerLayout() {
             >
               <MenuIcon />
             </IconButton>
-            <img
-              style={{ height: "40px" }}
-              src={BeeLineLogo}
-              alt="Beeline logo"
-            />
+            <Link to="/">
+              <img
+                style={{ height: "40px" }}
+                src={BeeLineLogo}
+                alt="Beeline logo"
+              />
+            </Link>
             <IconButton
               aria-label="cart"
               style={{ marginLeft: "auto" }}

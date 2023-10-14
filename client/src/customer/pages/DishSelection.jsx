@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -15,38 +16,43 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import food1 from "../images/food1.jpg"; // you should have this image in your project
+import food1 from "../images/food1.jpg";
 
-export default function DishSelection() {
+export default function DishSelection({ dish: propDish }) {
+  // <Link to={`/dishselection/${dish.item_id}`} />;
   const location = useLocation();
-  const dish = location.state
-    ? location.state.dish
-    : {
-        name: "Dish A",
-        description: "Dish A Description",
-        image: food1,
-        basePrice: 10,
-        sizes: [
-          { name: "Kids", price: 8 },
-          { name: "Small", price: 12 },
-          { name: "Large", price: 15 },
-        ],
-        mainIngredients: [
-          { name: "Ingredient One", price: 0 },
-          { name: "Ingredient Two", price: 2 },
-          { name: "Ingredient Three", price: 3 },
-        ],
-        addOns: [
-          { name: "Add-Ons One", price: 1 },
-          { name: "Add-Ons Two", price: 1 },
-          { name: "Add-Ons Three", price: 1.5 },
-        ],
-      };
+  const dish = propDish ||
+    location.state?.dish || {
+      name: "Dish A",
+      description: "Dish A Description",
+      image: food1,
+      basePrice: 10,
+      sizes: [
+        { name: "Kids", price: 8 },
+        { name: "Small", price: 12 },
+        { name: "Large", price: 15 },
+      ],
+      mainIngredients: [
+        { name: "Ingredient One", price: 0 },
+        { name: "Ingredient Two", price: 2 },
+        { name: "Ingredient Three", price: 3 },
+      ],
+      addOns: [
+        { name: "Add-Ons One", price: 1 },
+        { name: "Add-Ons Two", price: 1 },
+        { name: "Add-Ons Three", price: 1.5 },
+      ],
+    };
 
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(dish.basePrice);
   const [selectedMainIngredients, setSelectedMainIngredients] = useState([]);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
+
+  // If no dish data is available, redirect or show an error
+  if (!dish) {
+    return <div>No dish selected!</div>;
+  }
 
   const handleSizeChange = (event) => {
     setSize(event.target.value);

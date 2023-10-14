@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Divider,
   Accordion,
@@ -17,104 +17,41 @@ import food1 from "../images/food1.jpg"; // Ensure you have this image in your p
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+//import { stores } from "../../data";
+import axios from "axios";
 
-export default function Menu({
-  stores = [
-    {
-      name: "Store 1",
-      dishes: [
-        {
-          name: "Chicken Rice",
-          description: "This is Chicken Rice",
-          image: food1,
-          basePrice: 3.5,
-        },
-        {
-          name: "Noodles",
-          description: "This is Noodles",
-          image: food1,
-          basePrice: 4.0,
-        },
-        {
-          name: "Chicken Rice",
-          description: "This is Chicken Rice",
-          image: food1,
-          basePrice: 3.5,
-        },
-        {
-          name: "Noodles",
-          description: "This is Noodles",
-          image: food1,
-          basePrice: 4.0,
-        },
-        {
-          name: "Chicken Rice",
-          description: "This is Chicken Rice",
-          image: food1,
-          basePrice: 3.5,
-        },
-        {
-          name: "Noodles",
-          description: "This is Noodles",
-          image: food1,
-          basePrice: 4.0,
-        },
-      ],
-    },
-    {
-      name: "Store 2",
-      dishes: [
-        {
-          name: "Soup",
-          description: "This is Soup",
-          image: food1,
-          basePrice: 5.0,
-        },
-        {
-          name: "Chicken Rice",
-          description: "This is Chicken Rice",
-          image: food1,
-          basePrice: 3.5,
-        },
-        {
-          name: "Noodles",
-          description: "This is Noodles",
-          image: food1,
-          basePrice: 4.0,
-        },
-      ],
-    },
-    {
-      name: "Store 3",
-      dishes: [
-        {
-          name: "Soup",
-          description: "This is Soup",
-          image: food1,
-          basePrice: 5.0,
-        },
-        {
-          name: "Chicken Rice",
-          description: "This is Chicken Rice",
-          image: food1,
-          basePrice: 3.5,
-        },
-        {
-          name: "Noodles",
-          description: "This is Noodles",
-          image: food1,
-          basePrice: 4.0,
-        },
-      ],
-    },
-  ],
-}) {
+// import { fetchStoresDishes } from "../../database/queryDatabase";
+// console.log(fetchStoresDishes());
+
+export default function Menu() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8600/stores-menu-items")
+      .then((response) => {
+        setData(response.data);
+        console.log("This is our experiment lmfao");
+        console.log(response); // Use response.data instead of response.body
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!data) return <div>No data available</div>;
   return (
     <div>
-      {stores.map((store, index) => (
+      {data.map((store, index) => (
         <>
           <MenuItem store={store} />
-          {index !== stores.length - 1 && <Divider />}
+          {index !== data.length - 1 && <Divider />}
         </>
       ))}
     </div>
@@ -145,13 +82,14 @@ export function MenuItem({ store }) {
 }
 
 export function DishCard({ dish }) {
+  console.log(`${process.env.PUBLIC_URL}/images/${dish.image}`);
   return (
     <Card sx={{ maxWidth: 280, margin: "auto" }}>
       <CardActionArea>
         <CardMedia
           component="img"
           height="140"
-          image={dish.image}
+          image={`${process.env.PUBLIC_URL}/images/${dish.image}`}
           alt={dish.name}
           sx={{ objectFit: "cover" }}
         />
@@ -178,7 +116,7 @@ export function DishCard({ dish }) {
             variant="contained"
             color="primary"
             to={{
-              pathname: "/dishselection",
+              pathname: `/dishselection/${dish.item_id}`,
               state: { dish },
             }}
           >
