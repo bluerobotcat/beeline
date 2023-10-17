@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -10,7 +10,13 @@ import {
   Select,
   Tabs,
   Tab,
+  List,
+  ListItem,
+  TextField,
+  Button,
+  Paper,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 // Sample order data
 const orders = [
@@ -64,7 +70,7 @@ const orders = [
   },
   {
     personName: "John Doe",
-    orderTime: new Date("2023-09-10T10:30:00"), // Upcoming date
+    orderTime: new Date("2023-10-16T10:30:00"), // Upcoming date
     orderType: "Online",
     paymentType: "Credit Card",
     orderDetails: "2 x Product A, 3 x Product B",
@@ -72,7 +78,7 @@ const orders = [
   },
   {
     personName: "Jane Smith",
-    orderTime: new Date("2023-09-12T14:45:00"), // Upcoming date
+    orderTime: new Date("2023-10-16T14:45:00"), // Upcoming date
     orderType: "In-store",
     paymentType: "Cash",
     orderDetails: "1 x Product C, 2 x Product D",
@@ -80,7 +86,7 @@ const orders = [
   },
   {
     personName: "Alice Johnson",
-    orderTime: new Date("2023-09-15T18:30:00"), // Upcoming date
+    orderTime: new Date("2023-10-15T18:30:00"), // Upcoming date
     orderType: "Online",
     paymentType: "Credit Card",
     orderDetails: "3 x Product A, 1 x Product B",
@@ -89,25 +95,156 @@ const orders = [
   // Add more sample orders here
 ];
 
-export default function VendorDashboard() {
-  const [selectedDay, setSelectedDay] = useState("Today");
-  const [selectedTab, setSelectedTab] = useState(0);
+const STATUSES = ["new", "pending", "complete"];
 
-  const handleDayChange = (event) => {
-    setSelectedDay(event.target.value);
+function formatDate(date) {
+  return date.toISOString().split("T")[0];
+}
+
+const StyledOrderCard = styled(Paper)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  padding: theme.spacing(2),
+  "&:hover": {
+    boxShadow: theme.shadows[4],
+  },
+}));
+
+function OrdersList({ orders }) {
+  return (
+    <Box mt={2}>
+      {orders.map((order, index) => (
+        <Box
+          key={index}
+          sx={{
+            border: "1px solid #ccc",
+            padding: "16px",
+            marginBottom: "8px",
+          }}
+        >
+          <Typography variant="subtitle1">
+            Person: {order.personName}
+          </Typography>
+          <Typography variant="subtitle2">
+            Time: {order.orderTime.toLocaleString()}
+          </Typography>
+          <Typography variant="body2">Type: {order.orderType}</Typography>
+          <Typography variant="body2">Payment: {order.paymentType}</Typography>
+          <Typography variant="body2">Details:</Typography>
+          <List>
+            {order.orderDetails.split(",").map((detail, index) => (
+              <ListItem key={index}>
+                <Typography variant="body2">{detail.trim()}</Typography>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+function OrderItem({ order, onChangeStatus }) {
+  return (
+    <StyledOrderCard elevation={2}>
+      <Typography variant="h6">Person: {order.personName}</Typography>
+      <Typography variant="body1" color="textSecondary">
+        Time: {order.orderTime.toLocaleString()}
+      </Typography>
+      <Typography variant="body2">Type: {order.orderType}</Typography>
+      <Typography variant="body2">Payment: {order.paymentType}</Typography>
+      <Typography variant="body2" gutterBottom>
+        Details:
+      </Typography>
+      <List>
+        {order.orderDetails.split(",").map((detail, index) => (
+          <ListItem key={index}>
+            <Typography variant="body2">{detail.trim()}</Typography>
+          </ListItem>
+        ))}
+      </List>
+      <Typography variant="body2" gutterBottom>
+        Status: {order.status}
+      </Typography>
+      <Box mt={1} display="flex" justifyContent="space-between">
+        {STATUSES.map((status) => (
+          <Button
+            key={status}
+            variant="outlined"
+            size="small"
+            disabled={order.status === status}
+            onClick={() => onChangeStatus(order, status)}
+            sx={{ textTransform: "none" }}
+          >
+            Set to {status}
+          </Button>
+        ))}
+      </Box>
+    </StyledOrderCard>
+  );
+}
+
+export default function VendorOrder() {
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [period, setPeriod] = useState("daily");
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+
+  const [currentOrders, setCurrentOrders] = useState(orders);
+
+  const handleStatusChange = (changedOrder, newStatus) => {
+    const updatedOrders = currentOrders.map((order) =>
+      order === changedOrder ? { ...order, status: newStatus } : order
+    );
+    setCurrentOrders(updatedOrders);
   };
 
-  const dateOptions = [
-    { label: "Today", value: new Date() },
-    {
-      label: "Yesterday",
-      value: new Date(new Date().setDate(new Date().getDate() - 1)),
-    },
-    {
-      label: "2 days ago",
-      value: new Date(new Date().setDate(new Date().getDate() - 2)),
-    },
-  ];
+  useEffect(() => {
+    const selectedDateTime = new Date(selectedDate);
+    let filtered = [];
+
+    switch (period) {
+      case "daily":
+        filtered = currentOrders.filter((order) => {
+          const orderDate = new Date(order.orderTime)
+            .toISOString()
+            .split("T")[0];
+          return orderDate === selectedDate;
+        });
+        break;
+
+      case "weekly":
+        const startOfWeek = new Date(selectedDateTime);
+        startOfWeek.setDate(
+          selectedDateTime.getDate() - selectedDateTime.getDay()
+        );
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+        filtered = orders.filter((order) => {
+          const orderDate = new Date(order.orderTime);
+          return orderDate >= startOfWeek && orderDate <= endOfWeek;
+        });
+        break;
+
+      case "monthly":
+        filtered = orders.filter((order) => {
+          const orderDate = new Date(order.orderTime);
+          return (
+            orderDate.getMonth() === selectedDateTime.getMonth() &&
+            orderDate.getFullYear() === selectedDateTime.getFullYear()
+          );
+        });
+        break;
+
+      default:
+        filtered = [];
+    }
+
+    setFilteredOrders(filtered);
+  }, [period, selectedDate, currentOrders]);
+
   return (
     <Container maxWidth="md">
       <Box my={4}>
@@ -117,26 +254,31 @@ export default function VendorDashboard() {
               ORDERS
             </Typography>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Grid item xs={6} sm={3}>
+            <TextField
+              id="date"
+              label="Select Date"
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={6} sm={3}>
             <FormControl sx={{ minWidth: 120 }}>
-              <InputLabel id="day-select-label">Day</InputLabel>
+              <InputLabel id="period-select-label">Period</InputLabel>
               <Select
-                labelId="day-select-label"
-                id="day-select"
-                value={selectedDay}
-                label="Day"
-                onChange={handleDayChange}
+                labelId="period-select-label"
+                id="period-select"
+                value={period}
+                label="Period"
+                onChange={(e) => setPeriod(e.target.value)}
               >
-                {dateOptions.map((option, index) => (
-                  <MenuItem key={index} value={option.label}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                <MenuItem value={"daily"}>Daily</MenuItem>
+                <MenuItem value={"weekly"}>Weekly</MenuItem>
+                <MenuItem value={"monthly"}>Monthly</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -156,63 +298,14 @@ export default function VendorDashboard() {
           </Tabs>
 
           <Box mt={2}>
-            {orders.map((order, index) => {
-              const orderDate = new Date(order.orderTime);
-              const currentDate = new Date();
-              const currentYear = currentDate.getFullYear();
-              const currentMonth = currentDate.getMonth();
-              const currentDay = currentDate.getDate();
-
-              const orderYear = orderDate.getFullYear();
-              const orderMonth = orderDate.getMonth();
-              const orderDay = orderDate.getDate();
-
-              const isOrderToday =
-                selectedDay === "Today" &&
-                orderYear === currentYear &&
-                orderMonth === currentMonth &&
-                orderDay === currentDay;
-
-              const isOrderNew = order.status === "new";
-              const isOrderPending = order.status === "pending";
-              const isOrderComplete = order.status === "complete";
-
-              let isOrderTab = false;
-              if (selectedTab === 0) {
-                isOrderTab = isOrderNew;
-              } else if (selectedTab === 1) {
-                isOrderTab = isOrderPending;
-              } else if (selectedTab === 2) {
-                isOrderTab = isOrderComplete;
-              }
-
-              if (isOrderToday && isOrderTab) {
+            {filteredOrders.map((order, index) => {
+              if (STATUSES[selectedTab] === order.status) {
                 return (
-                  <Box
+                  <OrderItem
                     key={index}
-                    sx={{
-                      border: "1px solid #ccc",
-                      padding: "16px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <Typography variant="subtitle1">
-                      Person who ordered: {order.personName}
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      Order Time: {orderDate.toLocaleString()}
-                    </Typography>
-                    <Typography variant="body2">
-                      Order Type: {order.orderType}
-                    </Typography>
-                    <Typography variant="body2">
-                      Payment Type: {order.paymentType}
-                    </Typography>
-                    <Typography variant="body2">Order Details:</Typography>
-                    <Typography variant="body2" sx={{ marginLeft: "16px" }}>
-                      {order.orderDetails}
-                    </Typography>
-                  </Box>
+                    order={order}
+                    onChangeStatus={handleStatusChange}
+                  />
                 );
               }
               return null;
