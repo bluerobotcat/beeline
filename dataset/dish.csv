@@ -1,11 +1,11 @@
 dishid,dishname,dishdescription,dishprice,dishavailable,dishimgpath
-1,Hainanese Beef Noodles,A noodle soup with tender beef slices and a savory broth. This tasty dish is tasty and delicious.,9.00,0,https://picsum.photos/200/200?random=1
-2,Hainanese Chicken Rice,A fragrant and tender chicken dish served with flavorful rice and delicious chili sauce. This savory dish is tasty and savory.,7.90,1,https://picsum.photos/200/200?random=2
-3,Bak Kut Teh,A flavorful pork rib soup made with a variety of herbs and spices. This flavorful dish is tasty and mouthwatering.,17.90,0,https://picsum.photos/200/200?random=3
-4,Nasi Lemak,"A fragrant rice dish cooked in coconut milk, served with sambal, anchovies, and peanuts. This delicious dish is savory and savory.",16.80,0,https://picsum.photos/200/200?random=4
-5,Char Kway Teow,"Stir-fried flat rice noodles with prawns, eggs, and a sweet and savory sauce. This tasty dish is tasty and tasty.",17.10,0,https://picsum.photos/200/200?random=5
-6,Laksa,"A spicy noodle soup with a rich and creamy coconut broth, often made with seafood or chicken. This delicious dish is tasty and tasty.",7.80,0,https://picsum.photos/200/200?random=6
-7,Hokkien Mee,Stir-fried prawn and squid noodles with a rich seafood flavor. This savory dish is savory and flavorful.,7.70,0,https://picsum.photos/200/200?random=7
-8,Chilli Crab,"Crab cooked in a sweet and spicy tomato-based sauce, best enjoyed with mantou buns. This flavorful dish is delicious and tasty.",18.30,1,https://picsum.photos/200/200?random=8
-9,Rojak,"A mixed salad with a sweet and tangy sauce, often featuring fruits, vegetables, and tofu. This mouthwatering dish is delicious and mouthwatering.",12.10,1,https://picsum.photos/200/200?random=9
-10,Satay,"Skewered and grilled meat, typically served with a peanut sauce and rice cakes. This delicious dish is tasty and flavorful.",16.00,1,https://picsum.photos/200/200?random=10
+1,Char Kway Teow,"Stir-fried flat rice noodles with prawns, eggs, and a sweet and savory sauce. This mouthwatering dish is flavorful and tasty.",19.50,1,https://picsum.photos/200/200?random=1
+2,Hainanese Chicken Rice,A fragrant and tender chicken dish served with flavorful rice and delicious chili sauce. This flavorful dish is delicious and tasty.,5.90,1,https://picsum.photos/200/200?random=2
+3,Bak Kut Teh,A flavorful pork rib soup made with a variety of herbs and spices. This savory dish is tasty and flavorful.,13.90,0,https://picsum.photos/200/200?random=3
+4,Hokkien Mee,Stir-fried prawn and squid noodles with a rich seafood flavor. This mouthwatering dish is tasty and flavorful.,11.10,0,https://picsum.photos/200/200?random=4
+5,Chilli Crab,"Crab cooked in a sweet and spicy tomato-based sauce, best enjoyed with mantou buns. This flavorful dish is flavorful and delicious.",15.30,0,https://picsum.photos/200/200?random=5
+6,Hainanese Beef Noodles,A noodle soup with tender beef slices and a savory broth. This tasty dish is flavorful and mouthwatering.,10.60,1,https://picsum.photos/200/200?random=6
+7,Laksa,"A spicy noodle soup with a rich and creamy coconut broth, often made with seafood or chicken. This delicious dish is mouthwatering and savory.",13.30,1,https://picsum.photos/200/200?random=7
+8,Satay,"Skewered and grilled meat, typically served with a peanut sauce and rice cakes. This savory dish is delicious and mouthwatering.",16.80,1,https://picsum.photos/200/200?random=8
+9,Nasi Lemak,"A fragrant rice dish cooked in coconut milk, served with sambal, anchovies, and peanuts. This savory dish is tasty and delicious.",6.40,1,https://picsum.photos/200/200?random=9
+10,Rojak,"A mixed salad with a sweet and tangy sauce, often featuring fruits, vegetables, and tofu. This delicious dish is flavorful and flavorful.",11.90,1,https://picsum.photos/200/200?random=10

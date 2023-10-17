@@ -20,9 +20,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 //import { stores } from "../../data";
 import axios from "axios";
 
-// import { fetchStoresDishes } from "../../database/queryDatabase";
-// console.log(fetchStoresDishes());
-
 export default function Menu() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +27,7 @@ export default function Menu() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8600/stores-menu-items")
+      .get("http://localhost:8600/all-dishes")
       .then((response) => {
         setData(response.data);
         console.log("This is our experiment lmfao");
@@ -65,10 +62,10 @@ export function MenuItem({ store }) {
     <Accordion defaultExpanded={true}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls={store.name}
-        id={store.name}
+        aria-controls={store.storeName}
+        id={store.storeName}
       >
-        <Typography variant="h5">{store.name}</Typography>
+        <Typography variant="h5">{store.storeName}</Typography>
       </AccordionSummary>
       <Grid container spacing={2}>
         {store.dishes.map((dish) => (
@@ -82,41 +79,40 @@ export function MenuItem({ store }) {
 }
 
 export function DishCard({ dish }) {
-  console.log(`${process.env.PUBLIC_URL}/images/${dish.image}`);
   return (
     <Card sx={{ maxWidth: 280, margin: "auto" }}>
       <CardActionArea>
         <CardMedia
           component="img"
           height="140"
-          image={`${process.env.PUBLIC_URL}/images/${dish.image}`}
-          alt={dish.name}
+          image={`${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`}
+          alt={dish.dishName}
           sx={{ objectFit: "cover" }}
         />
         <CardContent>
           <Typography gutterBottom variant="h6">
-            {dish.name}
+            {dish.dishName}
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ marginBottom: 2 }}
           >
-            {dish.description}
+            {dish.dishDescription}
           </Typography>
           <Typography
             variant="h6"
             color="text.secondary"
             sx={{ marginBottom: 2 }}
           >
-            ${dish.basePrice.toFixed(2)}
+            ${dish.dishPrice.toFixed(2)}
           </Typography>
           <Button
             component={Link}
             variant="contained"
             color="primary"
             to={{
-              pathname: `/dishselection/${dish.item_id}`,
+              pathname: `/dishselection/${dish.dishId}`,
               state: { dish },
             }}
           >
