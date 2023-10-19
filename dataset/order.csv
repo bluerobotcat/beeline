@@ -1,16 +1,16 @@
 orderid,storeid,ordersubtotal,ordertotal,orderdatetime,ordertype,orderstatus,paymenttype
-1,2,44.93,60.11,2023-12-07 23:41:27.650773,Takeaway,Pending,Credit Card
-2,4,97.03,109.54,2023-10-23 02:29:30.650773,Dine-in,Delivered,Cash
-3,3,80.0,91.25,2023-11-30 01:43:29.650773,Dine-in,Pending,Cash
-4,3,36.63,44.42,2023-11-01 23:35:51.650773,Takeaway,Pending,Credit Card
-5,3,77.03,83.85,2023-10-26 12:34:23.650773,Dine-in,Delivered,PayPal
-6,2,74.94,83.07,2023-11-22 13:12:55.650773,Dine-in,Delivered,Credit Card
-7,2,68.47,76.82,2023-11-08 17:06:47.650773,Dine-in,In Progress,Cash
-8,4,75.62,88.37,2023-10-27 10:59:33.650773,Takeaway,Pending,Credit Card
-9,3,57.71,70.12,2023-12-15 19:41:45.650773,Takeaway,Pending,PayPal
-10,1,32.49,37.85,2023-11-16 01:51:56.650773,Takeaway,Pending,Cash
-11,2,91.35,97.32,2023-12-08 11:53:15.650773,Dine-in,Delivered,PayPal
-12,5,66.21,71.94,2023-12-15 07:10:37.650773,Dine-in,Delivered,Cash
-13,4,21.75,32.13,2023-10-23 21:16:38.650773,Dine-in,Delivered,Cash
-14,5,36.01,43.1,2023-12-07 03:54:54.650773,Takeaway,Delivered,Credit Card
-15,5,40.15,55.17,2023-11-16 07:05:46.650773,Dine-in,Delivered,Credit Card
+1,4,67.72,79.93,2023-10-25 22:23:07.596924,Dine-in,Pending,Cash
+2,2,74.84,87.61,2023-12-16 15:48:16.596924,Dine-in,In Progress,PayPal
+3,1,39.14,53.86,2023-12-02 07:28:49.596924,Dine-in,Pending,PayPal
+4,1,22.01,34.7,2023-11-05 06:13:28.596924,Takeaway,In Progress,Cash
+5,1,93.36,104.33,2023-11-19 19:26:44.596924,Takeaway,In Progress,Credit Card
+6,3,58.25,70.9,2023-12-07 00:47:45.596924,Dine-in,Pending,PayPal
+7,5,23.46,31.65,2023-12-12 16:32:38.596924,Takeaway,Pending,Credit Card
+8,2,56.2,68.9,2023-10-23 16:56:53.596924,Takeaway,In Progress,PayPal
+9,3,79.11,89.39,2023-10-21 21:20:38.596924,Takeaway,In Progress,Credit Card
+10,3,57.93,77.9,2023-12-02 11:11:47.596924,Takeaway,Pending,Credit Card
+11,4,82.47,101.07,2023-10-28 11:39:17.596924,Dine-in,Pending,Credit Card
+12,1,70.09,82.85,2023-12-03 21:53:39.596924,Takeaway,In Progress,Credit Card
+13,3,35.04,42.89,2023-12-13 05:50:51.596924,Takeaway,Pending,PayPal
+14,4,96.32,103.9,2023-11-21 09:20:31.596924,Takeaway,Delivered,PayPal
+15,5,77.96,89.08,2023-11-22 01:52:34.596924,Takeaway,Pending,PayPal

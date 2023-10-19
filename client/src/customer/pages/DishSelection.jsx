@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -7,19 +7,25 @@ import {
   CardContent,
   CardMedia,
   Checkbox,
-  FormControl,
-  FormControlLabel,
+  FormControl, // Import Checkbox
+  FormControlLabel, // Import FormControlLabel
   Grid,
   InputLabel,
-  MenuItem,
   Select,
   Typography,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import food1 from "../images/food1.jpg";
+import {
+  Add as AddIcon,
+  Remove as RemoveIcon,
+  ShoppingCart as ShoppingCartIcon,
+} from "@mui/icons-material";
+import axios from "axios";
+import { useCart } from "./CartProvider";
+import { ORDER_ID_SESSION } from "./SessionID";
 
 export default function DishSelection({ dish: propDish }) {
-  // <Link to={`/dishselection/${dish.item_id}`} />;
   const location = useLocation();
   const dish = propDish ||
     location.state?.dish || {
@@ -28,9 +34,9 @@ export default function DishSelection({ dish: propDish }) {
       image: food1,
       basePrice: 10,
       sizes: [
-        { name: "Kids", price: 8 },
-        { name: "Small", price: 12 },
-        { name: "Large", price: 15 },
+        { id: "Small", name: "Small", multiplier: 0.9 },
+        { id: "Regular", name: "Regular", multiplier: 1.0 },
+        { id: "Large", name: "Large", multiplier: 1.1 },
       ],
       mainIngredients: [
         { name: "Ingredient One", price: 0 },
@@ -45,32 +51,56 @@ export default function DishSelection({ dish: propDish }) {
     };
 
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState(dish.basePrice);
+
   const [selectedMainIngredients, setSelectedMainIngredients] = useState([]);
+
+  const [selectedMainIngredient, setSelectedMainIngredient] = useState([]);
+
   const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const defaultSizeId = dish.sizes && dish.sizes[0] ? dish.sizes[0].id : null;
+  const [selectedSizes, setSelectedSizes] = useState(
+    defaultSizeId ? [defaultSizeId] : []
+  );
 
-  // If no dish data is available, redirect or show an error
-  if (!dish) {
-    return <div>No dish selected!</div>;
-  }
+  const str = location.pathname;
+  const number = str.slice(str.lastIndexOf("/") + 1);
+  const [data, setData] = useState({
+    dishId: 0,
+    dishName: "",
+    dishDescription: "",
+    dishPrice: 0.0,
+    dishImgPath: process.env.PUBLIC_URL + "/images/",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { addToCart } = useCart();
 
-  const handleSizeChange = (event) => {
-    setSize(event.target.value);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8600/dish/${number}`)
+      .then((response) => {
+        setData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [number]);
+
+  const handleSingleSelectionChange = (setFunction, id) => {
+    setFunction([id]);
   };
 
-  const handleMainIngredientChange = (idx) => {
-    setSelectedMainIngredients((prevState) =>
-      prevState.includes(idx)
-        ? prevState.filter((i) => i !== idx)
-        : [...prevState, idx]
-    );
+  const handleSizeChange = (sizeId) => {
+    setSelectedSizes([sizeId]);
   };
 
   const handleAddOnsChange = (idx) => {
-    setSelectedAddOns((prevState) =>
-      prevState.includes(idx)
-        ? prevState.filter((i) => i !== idx)
-        : [...prevState, idx]
+    setSelectedAddOns((prevAddOns) =>
+      prevAddOns.includes(idx)
+        ? prevAddOns.filter((i) => i !== idx)
+        : [...prevAddOns, idx]
     );
   };
 
@@ -78,13 +108,81 @@ export default function DishSelection({ dish: propDish }) {
     setQuantity(event.target.value);
   };
 
+  // total price and surcharge
+
+  const totalSizePrice = selectedSizes
+    ? selectedSizes.reduce(
+        (acc, selectedSize) =>
+          acc +
+          dish.sizes.find((size) => size.id === selectedSize).multiplier *
+            data.dishPrice,
+        0
+      )
+    : 0;
+
+  const totalMainIngredientsPrice = selectedMainIngredients
+    ? selectedMainIngredients.reduce(
+        (acc, idx) => acc + dish.mainIngredients[idx].price,
+        0
+      )
+    : 0;
+
+  const totalAddOnsPrice = selectedAddOns
+    ? selectedAddOns.reduce((acc, idx) => acc + dish.addOns[idx].price, 0)
+    : 0;
+
   const totalPrice =
-    size +
-    selectedMainIngredients.reduce(
-      (acc, idx) => acc + dish.mainIngredients[idx].price,
-      0
-    ) +
-    selectedAddOns.reduce((acc, idx) => acc + dish.addOns[idx].price, 0);
+    totalSizePrice + totalMainIngredientsPrice + totalAddOnsPrice;
+
+  const surchargePrice = totalPrice - data.dishPrice;
+
+  // total modifier text
+
+  const totalSizeMod = selectedSizes
+    ? selectedSizes.reduce(
+        (acc, selectedSize) =>
+          acc + "; " + dish.sizes.find((size) => size.id === selectedSize).name,
+        ""
+      )
+    : "";
+
+  const totalMainIngredientsMod = selectedMainIngredients
+    ? selectedMainIngredients.reduce(
+        (acc, idx) => acc + "; " + dish.mainIngredients[idx].name,
+        ""
+      )
+    : "";
+
+  const totalAddOnsMod = selectedAddOns
+    ? selectedAddOns.reduce(
+        (acc, idx) => acc + "; " + dish.addOns[idx].name,
+        ""
+      )
+    : "";
+
+  const totalModifiers =
+    totalSizeMod + totalMainIngredientsMod + totalAddOnsMod;
+
+  const handleAddToCart = async () => {
+    const cartDataToPost = {
+      orderId: ORDER_ID_SESSION,
+      dishId: number,
+      orderItemQty: quantity,
+      orderModifier: totalModifiers.length > 0 ? totalModifiers.slice(2) : "",
+      orderSurcharge: Math.round(surchargePrice, 2),
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8600/order-item",
+        cartDataToPost
+      );
+      console.log("Added to cart: ", cartDataToPost);
+      console.log(response.data);
+    } catch (error) {
+      console.error("There was an error:", error);
+    }
+  };
 
   return (
     <Box
@@ -108,39 +206,46 @@ export default function DishSelection({ dish: propDish }) {
         <CardMedia
           component="img"
           sx={{ width: "100%", maxHeight: "300px", objectFit: "cover" }}
-          image={dish.image}
-          alt={dish.name}
+          image={`${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`}
+          alt={data.dishName}
         />
         <CardContent>
           <Typography variant="h5" component="div">
-            {dish.name}
+            {data.dishName}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            {dish.description}
+            {data.dishDescription}
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormControl
-                sx={{ m: 1, display: "flex", flexDirection: "column" }}
-              >
-                <InputLabel id="size-select-label">Size</InputLabel>
-                <Select
-                  labelId="size-select-label"
-                  id="size-select"
-                  value={size}
-                  onChange={handleSizeChange}
-                >
-                  <MenuItem value={dish.basePrice}>
-                    Base Price (${dish.basePrice})
-                  </MenuItem>
-                  {dish.sizes.map((size, idx) => (
-                    <MenuItem key={idx} value={size.price}>
-                      {size.name} (${size.price})
-                    </MenuItem>
+              <FormControl component="fieldset">
+                <Typography variant="subtitle1" color="text.secondary">
+                  Size
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  {dish.sizes.map((size) => (
+                    <FormControlLabel
+                      key={size.id}
+                      control={
+                        <Checkbox
+                          checked={selectedSizes.includes(size.id)}
+                          onChange={() =>
+                            handleSingleSelectionChange(
+                              setSelectedSizes,
+                              size.id
+                            )
+                          }
+                        />
+                      }
+                      label={`${size.name} ($${(
+                        size.multiplier * data.dishPrice
+                      ).toFixed(2)})`}
+                    />
                   ))}
-                </Select>
+                </Box>
               </FormControl>
             </Grid>
+
             <Grid item xs={12}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1" color="text.secondary">
@@ -149,13 +254,21 @@ export default function DishSelection({ dish: propDish }) {
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   {dish.mainIngredients.map((ingredient, idx) => (
                     <FormControlLabel
+                      key={idx}
                       control={
                         <Checkbox
-                          checked={selectedMainIngredients.includes(idx)}
-                          onChange={() => handleMainIngredientChange(idx)}
+                          checked={selectedMainIngredient.includes(idx)}
+                          onChange={() =>
+                            handleSingleSelectionChange(
+                              setSelectedMainIngredient,
+                              idx
+                            )
+                          }
                         />
                       }
-                      label={`${ingredient.name} (+$${ingredient.price})`}
+                      label={`${ingredient.name} (+$${ingredient.price.toFixed(
+                        2
+                      )})`}
                     />
                   ))}
                 </Box>
@@ -169,20 +282,21 @@ export default function DishSelection({ dish: propDish }) {
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   {dish.addOns.map((addOn, idx) => (
                     <FormControlLabel
+                      key={idx}
                       control={
                         <Checkbox
                           checked={selectedAddOns.includes(idx)}
                           onChange={() => handleAddOnsChange(idx)}
                         />
                       }
-                      label={`${addOn.name} (+$${addOn.price})`}
+                      label={`${addOn.name} (+$${addOn.price.toFixed(2)})`}
                     />
                   ))}
                 </Box>
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <FormControl
+              {/* <FormControl
                 sx={{ m: 1, display: "flex", flexDirection: "column" }}
               >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -193,29 +307,92 @@ export default function DishSelection({ dish: propDish }) {
                     value={quantity}
                     onChange={handleQuantityChange}
                   >
-                    {[...Array(10).keys()].map((i) => (
+                    {/*[...Array(10).keys()].map((i) => (
                       <MenuItem key={i + 1} value={i + 1}>
                         {i + 1}
                       </MenuItem>
-                    ))}
+                    ))
                   </Select>
                 </Box>
-              </FormControl>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  fontWeight="bold"
-                  sx={{ textAlign: "center" }}
+              </FormControl> */}
+              <Grid
+                item
+                xs={12}
+                x={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FormControl
+                  sx={{
+                    m: 1,
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  Total Price: ${(totalPrice * quantity).toFixed(2)}
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Button component={Link} to="/cart" variant="contained">
-                  ADD TO CART
-                </Button>
-              </Box>
+                  <Button
+                    onClick={() =>
+                      setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+                    }
+                    variant="outlined"
+                    color="primary"
+                    disabled={quantity <= 1}
+                  >
+                    <RemoveIcon />
+                  </Button>
+                  <Box
+                    sx={{
+                      mx: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: "40px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      padding: "0 10px",
+                    }}
+                  >
+                    {quantity}
+                  </Box>
+                  <Button
+                    onClick={() =>
+                      setQuantity((prev) => (prev < 10 ? prev + 1 : 10))
+                    }
+                    variant="outlined"
+                    color="primary"
+                    disabled={quantity >= 10}
+                  >
+                    <AddIcon />
+                  </Button>
+                </FormControl>
+                <Box sx={{ m: 2 }} />
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    fontWeight="bold"
+                    sx={{ textAlign: "center" }}
+                  >
+                    Total Price: ${(totalPrice * quantity).toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box sx={{ m: 2 }} />
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <Button
+                    onClick={handleAddToCart}
+                    component={Link}
+                    to="/cart"
+                    variant="contained"
+                    startIcon={<ShoppingCartIcon />}
+                  >
+                    ADD TO CART
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
         </CardContent>

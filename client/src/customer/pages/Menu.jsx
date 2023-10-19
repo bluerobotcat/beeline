@@ -30,8 +30,8 @@ export default function Menu() {
       .get("http://localhost:8600/all-dishes")
       .then((response) => {
         setData(response.data);
-        console.log("This is our experiment lmfao");
-        console.log(response); // Use response.data instead of response.body
+        // console.log("This is our experiment lmfao");
+        // console.log(response); // Use response.data instead of response.body
         setLoading(false);
       })
       .catch((error) => {
@@ -57,7 +57,6 @@ export default function Menu() {
 export function MenuItem({ store }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   return (
     <Accordion defaultExpanded={true}>
       <AccordionSummary
@@ -79,6 +78,7 @@ export function MenuItem({ store }) {
 }
 
 export function DishCard({ dish }) {
+  // console.log(dish);
   return (
     <Card sx={{ maxWidth: 280, margin: "auto" }}>
       <CardActionArea>
@@ -113,7 +113,6 @@ export function DishCard({ dish }) {
             color="primary"
             to={{
               pathname: `/dishselection/${dish.dishId}`,
-              state: { dish },
             }}
           >
             Add to Cart

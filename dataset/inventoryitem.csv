@@ -1,11 +1,11 @@
 inventoryitemid,inventoryitemname,inventoryitemqty,inventoryitemmin,inventoryitemmax,expirydate,inventoryitemunit,ingredientid
-1,Environmental Storage,97,29,119,2024-04-24,Returns,1
-2,Control Storage,41,38,134,2025-03-23,Pushs,2
-3,Set Storage,79,50,89,2025-03-20,Olds,3
-4,Nearly Storage,50,49,121,2024-09-07,Ables,4
-5,Article Storage,27,33,77,2024-04-14,Clears,5
-6,Growth Storage,63,7,42,2024-02-08,Citys,6
-7,Begin Storage,40,29,116,2024-03-31,Firsts,7
-8,Student Storage,38,50,133,2023-11-22,Internationals,8
-9,Memory Storage,11,40,51,2025-05-10,Oks,9
-10,Race Storage,26,40,123,2024-08-03,Nights,10
+1,Buy Storage,82,50,139,2024-10-08,Designs,1
+2,List Storage,78,13,42,2024-08-18,Spends,2
+3,Mind Storage,20,33,87,2025-08-25,Streets,3
+4,Whose Storage,44,28,105,2024-01-10,Enters,4
+5,Test Storage,46,42,100,2025-01-02,Likes,5
+6,Author Storage,38,6,33,2024-10-15,Determines,6
+7,See Storage,67,33,95,2025-01-09,Meets,7
+8,Too Storage,89,5,74,2025-04-27,Nones,8
+9,Other Storage,75,36,133,2025-02-04,Lifes,9
+10,Land Storage,19,10,58,2024-03-25,Takes,10

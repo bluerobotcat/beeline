@@ -35,6 +35,8 @@ class PostOrderItem(BaseModel):
     orderId: int
     dishId: int
     orderItemQty: int
+    orderModifier: str
+    orderSurcharge: float
 
 
 class PutOrderItem(BaseModel):
@@ -78,8 +80,12 @@ def get_dish_by_id(dishId: int):
 def post_order_item(data: PostOrderItem):
     # Expect json keys: orderId, dishId, orderItemQty
     cursor = conn.cursor()
-    query = "INSERT INTO orderitem (orderId, dishId, orderItemQty) VALUES (%s, %s, %s)"
-    cursor.execute(query, (data.orderId, data.dishId, data.orderItemQty))
+    query = """
+    INSERT INTO orderitem (orderId, dishId, orderItemQty, orderModifier, orderSurcharge)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (data.orderId, data.dishId,
+                   data.orderItemQty, data.orderModifier, data.orderSurcharge))
     conn.commit()
     cursor.close()
     return SUCCESS_MESSAGE
@@ -112,7 +118,7 @@ def get_customer_order_by_id(orderId: int):
     # Expects orderId at endpoint
     cursor = conn.cursor()
     query = """
-    SELECT customerorder.orderId, orderItemId, dish.dishId, dishName, dishPrice, orderItemQty
+    SELECT customerorder.orderId, orderItemId, dish.dishId, dishName, dishPrice, orderItemQty, orderModifier, orderSurcharge
     FROM customerorder, orderitem, dish
     WHERE customerorder.orderId=%s AND customerorder.orderId=orderitem.orderId AND orderitem.dishId=dish.dishId 
     ORDER BY dishName

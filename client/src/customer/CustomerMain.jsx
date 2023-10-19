@@ -2,6 +2,7 @@ import React from "react";
 import CustomerFooter from "./components/CustomerFooter";
 import CustomerLayout from "./components/CustomerLayout";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { CartProvider } from "./pages/CartProvider";
 
 const theme = createTheme({
   palette: {
@@ -24,8 +25,10 @@ export default function CustomerMain() {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <CustomerLayout />
-        <CustomerFooter />
+        <CartProvider>
+          <CustomerLayout />
+          <CustomerFooter />
+        </CartProvider>
       </ThemeProvider>
     </div>
   );

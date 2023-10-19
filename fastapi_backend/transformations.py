@@ -39,19 +39,29 @@ def transform_dish_item(ip):
 
 
 def transform_customer_order(ip):
+    '''
+    {
+        'orderId': 1,
+        'dishes': [{...}, {...}],
+        'orderTotal': 0.00
+    }
+    '''
 
     if len(ip) == 0:
-        return []
+        return {'orderId': ip[0][0], 'orderItems': [], 'orderTotal': 0.00}
+
     dishes, total = [], 0
 
     for i in range(len(ip)):
-        total = total + ip[i][4] * ip[i][5]
+        total = total + (ip[i][4] + ip[i][7]) * ip[i][5]
         dishes.append({
             'orderItemId': ip[i][1],
             'dishId': ip[i][2],
             'dishName': ip[i][3],
             'dishPrice': ip[i][4],
-            'orderItemQty': ip[i][5]
+            'orderItemQty': ip[i][5],
+            'orderModifier': ip[i][6],
+            'orderSurcharge': ip[i][7]
         })
 
     return {'orderId': ip[0][0], 'orderItems': dishes, 'orderTotal': total}

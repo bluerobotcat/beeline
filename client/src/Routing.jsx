@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./customer/pages/Home";
 import Menu from "./customer/pages/Menu";
-import CartList from "./customer/pages/Cart";
+import Cart from "./customer/pages/Cart";
 import Account from "./customer/pages/Account";
 import Settings from "./customer/pages/Settings";
 import Information from "./customer/pages/FrequentlyAskedQuestions";
@@ -15,7 +15,8 @@ import ResetPassword from "./customer/pages/ResetPassword";
 import LogIn from "./customer/pages/LogIn";
 import SignUp from "./customer/pages/SignUp";
 import DishSelection from "./customer/pages/DishSelection";
-import Receipt from "./customer/pages/OrderSummary";
+import Receipt from "./customer/pages/Receipt";
+
 import VendorLandingPage from "./vendor/pages/VendorLandingPage";
 import VendorDashboard from "./vendor/pages/VendorDashboard";
 import VendorOrders from "./vendor/pages/VendorOrders";
@@ -37,7 +38,7 @@ export default function Routing() {
         {/* Customer */}
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/cart" element={<CartList />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/account" element={<Account />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/faq" element={<Information />} />
