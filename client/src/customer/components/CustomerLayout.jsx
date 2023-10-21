@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -31,10 +31,14 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Link, Route, Routes } from "react-router-dom";
 import Routing from "../../Routing";
 
+import axios from "axios";
+
+import { CUSTOMER_ID_GLOBAL } from "../../SessionID";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-  ({ theme, leftOpen, rightOpen }) => ({
+  ({ theme, leftOpen }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
@@ -49,33 +53,70 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
       }),
       marginLeft: 0,
     }),
-    marginRight: `-${drawerWidth}px`,
-    ...(rightOpen && {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginRight: 0,
-    }),
   })
 );
 
+// const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+//   ({ theme, leftOpen, rightOpen }) => ({
+//     flexGrow: 1,
+//     padding: theme.spacing(3),
+//     transition: theme.transitions.create("margin", {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.leavingScreen,
+//     }),
+//     marginLeft: `-${drawerWidth}px`,
+//     ...(leftOpen && {
+//       transition: theme.transitions.create("margin", {
+//         easing: theme.transitions.easing.easeOut,
+//         duration: theme.transitions.duration.enteringScreen,
+//       }),
+//       marginLeft: 0,
+//     }),
+//     marginRight: `-${drawerWidth}px`,
+//     ...(rightOpen && {
+//       transition: theme.transitions.create("margin", {
+//         easing: theme.transitions.easing.easeOut,
+//         duration: theme.transitions.duration.enteringScreen,
+//       }),
+//       marginRight: 0,
+//     }),
+//   })
+// );
+
+// const AppBar = styled(MuiAppBar, {
+//   shouldForwardProp: (prop) => prop !== "leftOpen" && prop !== "rightOpen",
+// })(({ theme, leftOpen, rightOpen }) => ({
+//   transition: theme.transitions.create(["margin", "width"], {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+
+//   ...(leftOpen &&
+//     !rightOpen && {
+//       width: `calc(100% - ${drawerWidth}px)`,
+//       marginLeft: `${drawerWidth}px`,
+//       transition: theme.transitions.create(["margin", "width"], {
+//         easing: theme.transitions.easing.easeOut,
+//         duration: theme.transitions.duration.enteringScreen,
+//       }),
+//     }),
+// }));
+
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "leftOpen" && prop !== "rightOpen",
-})(({ theme, leftOpen, rightOpen }) => ({
+  shouldForwardProp: (prop) => prop !== "leftOpen",
+})(({ theme, leftOpen }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(leftOpen &&
-    !rightOpen && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+  ...(leftOpen && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
     }),
+  }),
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -89,24 +130,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function CustomerLayout() {
   const theme = useTheme();
   const [leftOpen, setLeftOpen] = useState(false);
-  const [rightOpen, setRightOpen] = useState(false);
-
-  const handleLeftOpen = () => {
-    setLeftOpen(true);
-  };
-
-  const handleLeftClose = () => {
-    setLeftOpen(false);
-  };
-
-  const handleRightOpen = () => {
-    setRightOpen(true);
-  };
-
-  const handleRightClose = () => {
-    setRightOpen(false);
-  };
-
+  // const [rightOpen, setRightOpen] = useState(false);
   const icons = [
     <HomeIcon />,
     <MenuIcon />,
@@ -116,11 +140,42 @@ export default function CustomerLayout() {
     <SettingsIcon />,
   ];
 
+  const handleLeftOpen = () => setLeftOpen(true);
+  const handleLeftClose = () => setLeftOpen(false);
+  // const handleRightOpen = () => setRightOpen(true);
+  // const handleRightClose = () => setRightOpen(false);
+
+  const menuItems = [
+    { text: "Home", path: "/", iconIndex: 1 },
+    { text: "Menu", path: "/menu", iconIndex: 2 },
+    { text: "Cart", path: "/cart", iconIndex: 3 },
+    { text: "Account", path: "/account", iconIndex: 4 },
+    { text: "Settings", path: "/settings", iconIndex: 5 },
+  ];
+
+  // const [data, setData] = useState({ totalQty: 0 });
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:8600/customer-order-count/${CUSTOMER_ID_GLOBAL}`)
+  //     .then((response) => {
+  //       setData(response.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       setError(error);
+  //       setLoading(false);
+  //     });
+  // });
+
   return (
     <div>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", overflowX: "hidden" }}>
         <CssBaseline />
-        <AppBar position="fixed" leftOpen={leftOpen} rightOpen={rightOpen}>
+        <AppBar position="fixed" leftOpen={leftOpen}>
+          {/* <AppBar position="fixed" leftOpen={leftOpen} rightOpen={rightOpen}> */}
           <Toolbar>
             <IconButton
               color="inherit"
@@ -142,11 +197,13 @@ export default function CustomerLayout() {
               aria-label="cart"
               style={{ marginLeft: "auto" }}
               color="inherit"
-              onClick={handleRightOpen}
+              component={Link}
+              to="/cart"
             >
-              <Badge badgeContent={4} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
+              <ShoppingCartIcon />
+              {/* <Badge badgeContent={data.totalQty} color="secondary">
+               
+  </Badge> */}
             </IconButton>
             <IconButton
               aria-label="login"
@@ -164,6 +221,7 @@ export default function CustomerLayout() {
             flexShrink: 0,
             "& .MuiDrawer-paper": {
               width: drawerWidth,
+              maxWidth: drawerWidth,
               boxSizing: "border-box",
             },
           }}
@@ -182,13 +240,7 @@ export default function CustomerLayout() {
           </DrawerHeader>
           <Divider />
           <List>
-            {[
-              { text: "Home", path: "/", iconIndex: 1 },
-              { text: "Menu", path: "/menu", iconIndex: 2 },
-              { text: "Cart", path: "/cart", iconIndex: 3 },
-              { text: "Account", path: "/account", iconIndex: 4 },
-              { text: "Settings", path: "/settings", iconIndex: 5 },
-            ].map((item) => (
+            {menuItems.map((item) => (
               <ListItem key={item.path} disablePadding>
                 <Link
                   to={item.path}
@@ -207,46 +259,26 @@ export default function CustomerLayout() {
           <DrawerHeader />
           <Routing />
         </Main>
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="persistent"
-          anchor="right"
-          open={rightOpen}
-        >
-          <DrawerHeader>
-            <IconButton onClick={handleRightClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {[
-              "Setting 1",
-              "Setting 2",
-              "Setting 3",
-              "Setting 4",
-              "Setting 5",
-            ].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{icons[index]}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+        {/* Commented out the entire right drawer
+      <Drawer sx={{ width: drawerWidth, flexShrink: 0, "& .MuiDrawer-paper": { width: drawerWidth, boxSizing: "border-box" }}} variant="persistent" anchor="right" open={rightOpen}>
+        <DrawerHeader>
+          <IconButton onClick={handleRightClose}>
+            {theme.direction === "ltr" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {["Setting 1", "Setting 2", "Setting 3", "Setting 4", "Setting 5"].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>{icons[index]}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+      */}
       </Box>
     </div>
   );

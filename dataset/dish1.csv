@@ -1,0 +1,14 @@
+dishId,dishName,dishDescription,dishPrice,dishAvailable,dishImgPath,storeId
+1,"Chicken Rice","Eat and you will fly",5.00,1,food1.jpg,0
+2,"Duck Rice","Time to hide",6.00,1,food1.jpg,0
+3,"Pork Chop","Karate Chop",7.00,0,food1.jpg,0
+4,"Tom Yum Soup","Spicy Thai soup",10.99,1,tom_yum_soup.jpg,1
+5,"Pho Noodle Soup","Vietnamese noodle soup",9.99,1,pho_noodle_soup.jpg,2
+6,Bibimbap,"Korean mixed rice dish",12.99,1,bibimbap.jpg,3
+7,"Hummus Plate","Mediterranean appetizer",8.99,1,hummus_plate.jpg,4
+8,"Grilled Salmon","Mediterranean fish dish",15.99,1,grilled_salmon.jpg,3
+9,"Pho Ga","Vietnamese chicken noodle soup",10.99,1,pho_ga.jpg,2
+10,"Sushi Combo","Assorted sushi rolls",14.99,1,sushi_combo.jpg,3
+11,Bulgogi,"Korean marinated beef",13.99,1,bulgogi.jpg,3
+12,"Veggie Burrito","Mexican vegetarian burrito",11.99,1,veggie_burrito.jpg,4
+13,"Taco Salad","Mexican taco salad",10.99,1,taco_salad.jpg,4

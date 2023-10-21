@@ -27,7 +27,7 @@ export default function VendorMain() {
     <div>
       <ThemeProvider theme={theme}>
         <VendorLayout />
-        <VendorFooter />
+        {/* <VendorFooter /> */}
       </ThemeProvider>
     </div>
   );

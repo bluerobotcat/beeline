@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,54 +13,49 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Tooltip,
 } from "@mui/material";
 
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-
+import { useLocation } from "react-router-dom";
 export default function Receipt(props) {
   const location = useLocation();
-  const str = location.pathname;
-  const pathOrderId = str.slice(str.lastIndexOf("/") + 1);
+  const cartData = location.state?.cartData || [];
+  const storeInfo = props.storeInfo || {
+    storeId: "A001",
+    storeName: "Store A",
+    paymentMode: "VISA",
+  }; // Mock default values.
 
-  // fetch cart items from API
-  const [data, setData] = useState({
-    orderId: 0,
-    orderDate: "",
-    orderTime: "",
-    orderType: "",
-    paymentType: "",
-    orderTotal: 0.0,
-    orderItems: [],
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // The order ID should ideally be fetched from your backend or some state manageconst orderid = props.orderId || "0001";
+  const orderId = props.orderId || "0001"; // Placeholder in case not provided.
 
-  const cartTotal = data.orderTotal;
+  const initialQueueAndTransactionNumbers = () => {
+    const queueNo = `Q${orderId}`;
+    const transactionNo = `${storeInfo.storeId}${orderId}`;
+
+    return { transactionNo, queueNo };
+  };
+
+  const { transactionNo, queueNo } = initialQueueAndTransactionNumbers();
+
+  const currentDate = new Date();
+  const formattedDate = `${currentDate.getDate()}-${
+    currentDate.getMonth() + 1
+  }-${currentDate.getFullYear()}`;
+  const formattedTime = `${currentDate.getHours()}:${currentDate
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}`;
+
+  const cartTotal = cartData.reduce((acc, dish) => acc + dish.totalPrice, 0);
   const serviceFees = 0.1 * cartTotal;
   const total = cartTotal + serviceFees;
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8600/receipt/${pathOrderId}`)
-      .then((response) => {
-        setData(response.data);
-        // console.log("cart data is:", response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, [pathOrderId]);
+  const [waitingTime, setWaitingTime] = React.useState(10 / 60);
 
-  const [waitingTime, setWaitingTime] = React.useState(10);
-
-  useEffect(() => {
+  React.useEffect(() => {
     const intervalId = setInterval(() => {
-      if (waitingTime > 0) {
-        setWaitingTime((prevTime) => prevTime - 1);
+      if (Math.abs(waitingTime) > 1e-5) {
+        setWaitingTime((prevTime) => prevTime - 1 / 60);
       } else {
         clearInterval(intervalId);
       }
@@ -68,26 +63,6 @@ export default function Receipt(props) {
 
     return () => clearInterval(intervalId);
   }, [waitingTime]);
-
-  if (loading) {
-    return (
-      <Container component="main" maxWidth="xs">
-        <Typography>Loading order details...</Typography>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container component="main" maxWidth="xs">
-        <Typography color="error">
-          Error fetching order details: {error.message}
-        </Typography>
-      </Container>
-    );
-  }
-
-  console.log(data);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -105,14 +80,6 @@ export default function Receipt(props) {
         <Typography component="h1" variant="h5">
           Order Placed
         </Typography>
-
-        {loading && <Typography>Loading order details...</Typography>}
-        {error && (
-          <Typography color="error">
-            Error fetching order details: {error.message}
-          </Typography>
-        )}
-
         <List
           sx={{
             width: "100%",
@@ -134,9 +101,7 @@ export default function Receipt(props) {
           }}
         >
           <Typography variant="h6">Queue Number:</Typography>
-          <Typography variant="subtitle">
-            {("0000" + data.orderId).slice(-4)}
-          </Typography>
+          <Typography variant="subtitle">{queueNo}</Typography>
         </List>
         <List
           sx={{
@@ -150,7 +115,7 @@ export default function Receipt(props) {
             <>
               <Typography variant="h6">Waiting Time:</Typography>
               <Typography variant="subtitle" color="red">
-                {waitingTime} seconds
+                {(waitingTime * 60).toFixed(0)} seconds
               </Typography>
             </>
           ) : (
@@ -177,20 +142,17 @@ export default function Receipt(props) {
             textAlign: "left",
           }}
         >
+          {/* <Typography variant="h6" display="block">
+            Store: {storeInfo.storeName}
+          </Typography> */}
           <Typography variant="subtitle" display="block">
-            Transaction Date: {data.orderDate}
+            Transaction Date: {formattedDate}
           </Typography>
           <Typography variant="subtitle" display="block">
-            Transaction Time: {data.orderTime}
+            Transaction Time: {formattedTime}
           </Typography>
           <Typography variant="subtitle" display="block">
-            Transaction No.: {("0000" + data.orderId).slice(-4)}
-          </Typography>
-          <Typography sx={{ mt: 2 }} variant="subtitle" display="block">
-            Order Type: {data.orderType}
-          </Typography>
-          <Typography variant="subtitle" display="block">
-            Payment Mode: {data.paymentType}
+            Transaction No.: {transactionNo}
           </Typography>
         </List>
         <List
@@ -198,113 +160,55 @@ export default function Receipt(props) {
             width: "100%",
             maxWidth: 360,
             bgcolor: "background.paper",
-            mt: 2,
+            textAlign: "left",
           }}
         >
-          <Typography
-            variant="h6"
-            sx={{
-              textAlign: "center",
-              py: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+          <Typography variant="h6" display="block">
             Order Summary
           </Typography>
-          {data.orderItems.map((dish, index) => (
-            <ListItem
-              alignItems="flex-start"
-              key={index}
-              sx={{ py: 1.5, borderBottom: "1px solid #f5f5f5" }}
-            >
-              <Grid container justifyContent="space-between">
-                {/* Dish Name and Quantity */}
-                <Grid item xs={6}>
-                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {dish.dishName}
-                  </Typography>
-                  {/*<Typography variant="body2" color="textSecondary">
-                    Quantity: {dish.orderItemQty}
-                  </Typography>
-          */}
-                  <Typography variant="body2" color="textSecondary">
-                    {dish.orderModifier}
-                  </Typography>
-                </Grid>
-
-                {/* Price */}
-                <Grid item xs={6}>
-                  <Typography variant="body1" align="right">
-                    {dish.orderItemQty} x $
-                    {(dish.dishPrice + dish.orderSurcharge || 0).toFixed(2)}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </ListItem>
-          ))}
         </List>
-
-        <ListItem alignItems="flex-start" sx={{ pt: 1.5, pb: 0 }}>
-          <Grid container justifyContent="space-between">
-            {/* Service Fees Label */}
-            <Grid item xs={6}>
-              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                Subtotal
-              </Typography>
-            </Grid>
-
-            {/* Service Fees Amount */}
-            <Grid item xs={6}>
-              <Typography variant="body1" align="right">
-                ${cartTotal.toFixed(2)}
-              </Typography>
-            </Grid>
-          </Grid>
-        </ListItem>
-
-        <ListItem
-          alignItems="flex-start"
-          sx={{ pb: 1.5, pt: 0.5, borderBottom: "1px solid #f5f5f5" }}
+        <List
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
         >
-          <Grid container justifyContent="space-between">
-            {/* Service Fees Label */}
-            <Grid item xs={6}>
-              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                Service Fees
-              </Typography>
-            </Grid>
+          <List
+            sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+          >
+            {cartData.map((dish) => (
+              <ListItem alignItems="flex-start" key={dish.id}>
+                <Grid container justifyContent="space-between">
+                  <Typography variant="subtitle1">
+                    {dish.name} * {dish.quantity}
+                  </Typography>
+                  <Typography variant="subtitle1" align="right">
+                    ${dish.totalPrice.toFixed(2)}
+                  </Typography>
+                </Grid>
+              </ListItem>
+            ))}
+          </List>
 
-            {/* Service Fees Amount */}
-            <Grid item xs={6}>
-              <Typography variant="body1" align="right">
+          <Divider variant="inset" component="li" />
+
+          <ListItem alignItems="flex-start">
+            <Grid container justifyContent="space-between">
+              <Typography variant="subtitle1">Service Fees</Typography>
+              <Typography variant="subtitle1" align="right">
                 ${serviceFees.toFixed(2)}
               </Typography>
             </Grid>
-          </Grid>
-        </ListItem>
+          </ListItem>
 
-        <ListItem
-          alignItems="flex-start"
-          sx={{ py: 1.5, borderBottom: "1px solid #f5f5f5" }}
-        >
-          <Grid container justifyContent="space-between">
-            {/* Total Label */}
-            <Grid item xs={6}>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                Total
-              </Typography>
-            </Grid>
+          <Divider variant="inset" component="li" />
 
-            {/* Total Amount */}
-            <Grid item xs={6}>
+          <ListItem alignItems="flex-start">
+            <Grid container justifyContent="space-between">
+              <Typography variant="h6">Total</Typography>
               <Typography variant="h6" align="right">
                 ${total.toFixed(2)}
               </Typography>
             </Grid>
-          </Grid>
-        </ListItem>
-
-        {/* <ListItem alignItems="flex-start">
+          </ListItem>
+          {/* <ListItem alignItems="flex-start">
             <Grid item container justifyContent="space-between">
               <Typography variant="subtitle1">Dish A * 1</Typography>
               <Typography variant="subtitle1" align="right">
@@ -354,7 +258,15 @@ export default function Receipt(props) {
               </Typography>
             </Grid>
           </ListItem> */}
-
+          <ListItem alignItems="flex-start">
+            <Grid item container justifyContent="space-between">
+              <Typography variant="subtitle1">Payment Mode</Typography>
+              <Typography variant="subtitle1" align="right">
+                VISA
+              </Typography>
+            </Grid>
+          </ListItem>
+        </List>
         <List
           sx={{
             width: "100%",
@@ -370,21 +282,6 @@ export default function Receipt(props) {
             We hope to see you soon!
           </Typography>
         </List>
-      </Box>
-      <Box sx={{ mt: 4, textAlign: "center", minWidth: 300 }}>
-        <Tooltip title="Add more dishes to your cart">
-          <Button
-            component={Link}
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<ShoppingCartIcon />}
-            to="/"
-            sx={{ mr: 2 }}
-          >
-            Start new order
-          </Button>
-        </Tooltip>
       </Box>
     </Container>
   );

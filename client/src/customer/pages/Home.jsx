@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Divider } from "@mui/material";
 import Gallery from "../components/Gallery";
+import GalleryToo from "../components/GalleryToo";
 import StoreNav from "./StoreNav";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
@@ -8,7 +9,8 @@ import Menu from "./Menu";
 export default function Home() {
   return (
     <div>
-      <Gallery />
+      {/* <Gallery /> */}
+      <GalleryToo />
       <Divider />
       <StoreNav />
       <Divider />

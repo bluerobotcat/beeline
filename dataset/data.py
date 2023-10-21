@@ -103,25 +103,37 @@ def generate_customer_data(customerid):
     return (customerid, customername, customeremail, customerpassword)
 
 
-def generate_dish_data(dishid):
-    while True:
-        dishname = fake.singaporean_dish()
-        dishdescription = dish_descriptions[dishname]
+def generate_dish_data(store_id):
+    dishes_for_store = []
+    dish_names = list(ingredients.keys())
+    random.shuffle(dish_names)
+    for i in range(10):  # Generate 10 dishes for each store
+        dish_name = dish_names[i]
+        dish_description = f"Delicious {dish_name} made with fresh ingredients."
+        # Random price between $5 and $20 with 2 decimal places
+        price = round(random.uniform(5, 20), 2)
+        # Example dish_id generation, adjust as needed
+        dish_id = f"{store_id}_{i}"
+        dishes_for_store.append(
+            (dish_name, dish_description, price, store_id, dish_id))
+    return dishes_for_store
 
-        # Additional food-related words to include in the description
-        food_words = ["delicious", "tasty",
-                      "mouthwatering", "savory", "flavorful"]
 
-        # Add food words to the description
-        dishdescription += f" This {random.choice(food_words)} dish is {random.choice(food_words)} and {random.choice(food_words)}."
+def generate_ingredient_data(dish_name):
+    ingredients = {
+        'Laksa': ['Noodles', 'Shrimp', 'Fish cake', 'Coconut milk', 'Laksa leaves'],
+        'Chicken Rice': ['Chicken', 'Rice', 'Ginger', 'Soy sauce', 'Chili'],
+        'Hainanese Pork Chop': ['Pork loin', 'Breadcrumbs', 'Eggs', 'Soy sauce', 'Tomato ketchup'],
+        'Char Kway Teow': ['Flat rice noodles', 'Shrimp', 'Eggs', 'Chinese sausage', 'Bean sprouts'],
+        'Hokkien Mee': ['Yellow noodles', 'Rice noodles', 'Shrimp', 'Squid', 'Chicken stock'],
+        'Satay': ['Chicken', 'Beef', 'Mutton', 'Turmeric', 'Lemongrass'],
+        'Rojak': ['Pineapple', 'Cucumber', 'Jicama', 'Tofu', 'Shrimp paste'],
+        'Chendol': ['Green jelly', 'Coconut milk', 'Palm sugar', 'Red beans', 'Shaved ice'],
+        'Otah Otah': ['Mackerel fish', 'Coconut milk', 'Turmeric', 'Galangal', 'Banana leaves'],
+        'Bak Kut Teh': ['Pork ribs', 'Peppercorns', 'Garlic', 'Star anise', 'Soy sauce']
+    }
 
-        # Generate with 1 decimal place
-        dishprice = round(random.uniform(5, 20), 1)
-        # Format to display with 2 decimal places
-        dishprice_formatted = "{:.2f}".format(dishprice)
-        dishavailable = random.choice([0, 1])
-        dishimgpath = f"https://picsum.photos/200/200?random={dishid}"
-        return (dishid, dishname, dishdescription, dishprice_formatted, dishavailable, dishimgpath)
+    return ingredients.get(dish_name, [])
 
 
 def generate_inventoryitem_data(inventoryitemid, ingredientid):
@@ -134,20 +146,10 @@ def generate_inventoryitem_data(inventoryitemid, ingredientid):
     return (inventoryitemid, inventoryitemname, inventoryitemqty, inventoryitemmin, inventoryitemmax, expirydate, inventoryitemunit, ingredientid)
 
 
-def generate_dish_ingredient_relationship_data(ingredient_data):
-    relationship_data = []
-    for dishid in range(1, 11):
-        num_ingredients = random.randint(1, 5)
-        ingredients = random.sample(ingredient_data, num_ingredients)
-        for ingredient in ingredients:
-            relationship_data.append((dishid, ingredient[0]))
-    return relationship_data
+def generate_dish_ingredient_relationship_data(dish_id, dish_name):
+    return [(dish_id, ingredient) for ingredient in ingredients[dish_name]]
 
 
-# Initialize ingredient_data before the loop
-ingredient_data = []
-for i, (name, unit) in enumerate(ingredient_data, start=current_ingredient_id):
-    ingredient_data.append((i, name, unit))
 
 
 def generate_dish_ingredient_relationship_data(ingredient_data):
@@ -245,8 +247,8 @@ if __name__ == "__main__":
 
     # Generate Dish Data
     dish_data = [generate_dish_data(i) for i in range(1, 11)]
-    write_to_csv(dish_data, ['dishid', 'dishname', 'dishdescription',
-                 'dishprice', 'dishavailable', 'dishimgpath'], 'dish.csv')
+    write_to_csv(dish_data, ['dishname', 'dishdescription', 'dishprice', 'store_id', 'dish_id'], 'dish.csv')
+
 
     # Generate Dish-Ingredient Relationship
     relationship_data = generate_dish_ingredient_relationship_data(
@@ -277,6 +279,27 @@ if __name__ == "__main__":
                  'orderitemid', 'orderid', 'dishid', 'orderitemqty'], 'orderitem.csv')
 
     # Generate Store Data
-    store_data = [generate_store_data(i) for i in range(1, 11)]
+    store_data = [("store1", "Location1"), ("store2", "Location2")]  # Sample store data, replace with your own
     write_to_csv(store_data, ['storeid', 'storename', 'storeunit', 'storephone',
                  'storecategory', 'storeemail', 'storepassword'], 'store.csv')
+ dish_data = []
+    dishingredient_data = []
+    for store in store_data:
+        store_id = store[0]
+        dishes_for_store = generate_dish_data(store_id)
+        for dish in dishes_for_store:
+            dish_data.append(dish)
+            dish_name = dish[0]
+            dish_id = dish[4]  # Assuming dish_id is at index 4, adjust if necessary
+            dishingredient_data.extend(generate_dish_ingredient_relationship_data(dish_id, dish_name))
+    
+    # Sample CSV writing code, adjust based on your requirements:
+    with open("dishes.csv", "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(dish_data)
+    
+    with open("dish_ingredients.csv", "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(dishingredient_data)
+
+

@@ -26,35 +26,59 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 
-import { ORDER_ID_SESSION } from "./SessionID";
+import { CUSTOMER_ID_GLOBAL } from "../../SessionID";
 
 function DishCard({ dish, onEdit, onDelete }) {
   return (
-    <Box sx={{ p: 2, border: "1px solid #e0e0e0", borderRadius: "5px", mb: 2 }}>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={3} sm={2}>
-          <img
-            src={`${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`}
-            alt={dish.dishName}
-            style={{ width: "100%", borderRadius: "5px" }}
-          />
-        </Grid>
-        <Grid item xs={5} sm={7}>
-          <Typography variant="subtitle1">
-            <b>{dish.dishName}</b>
-          </Typography>
-          <Typography variant="caption" color="textSecondary">
-            ID: {dish.dishId} <br />
-            Modifiers/Add-ons:{" "}
-            {dish.orderModifier ? dish.orderModifier : "None"}
-          </Typography>
-        </Grid>
+    <Box
+      sx={{
+        p: 3,
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+        borderRadius: "8px",
+        mb: 3,
+        backgroundColor: "white",
+      }}
+    >
+      <Grid container spacing={4} alignItems="center">
+        {/* Image */}
         <Grid item xs={4} sm={3}>
-          <Typography variant="subtitle1">
-            {dish.orderItemQty} x $
-            {(dish.dishPrice + dish.orderSurcharge).toFixed(2)}
+          <Box
+            sx={{
+              overflow: "hidden",
+              borderRadius: "8px",
+              height: "auto",
+            }}
+          >
+            <img
+              src={
+                dish.dishImgPath.startsWith("http")
+                  ? dish.dishImgPath
+                  : `${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`
+              }
+              alt={dish.dishName}
+              style={{ width: "100%", display: "block", borderRadius: "8px" }}
+            />
+          </Box>
+        </Grid>
+
+        {/* Dish Details */}
+        <Grid item xs={5} sm={4}>
+          <Typography variant="h6" gutterBottom>
+            {dish.dishName}
+          </Typography>
+          {/* <Typography variant="body2" color="textSecondary" gutterBottom>
+            ID: {dish.dishId}
+            </Typography>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            Quantity: {dish.orderItemQty}
+            </Typography> */}
+          <Typography variant="body2" color="textSecondary">
+            <i>Modifiers/Add-ons:</i>
+            <br />
+            {dish.orderModifier || "None"}
           </Typography>
         </Grid>
+
         {/*
           <Grid item xs={9}>
           <Typography variant="subtitle1">
@@ -66,24 +90,107 @@ function DishCard({ dish, onEdit, onDelete }) {
           </Typography>
           </Grid>
         */}
-        {/*
-          <Grid item xs={3}>
-            <IconButton size="small" onClick={() => onEdit(dish)} color="primary">
-              <EditIcon fontSize="small" />
-            </IconButton>
+
+        {/* Edit/Delete Actions */}
+        <Grid
+          item
+          xs={12}
+          sm={2}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: 2, // This creates even spacing between the two buttons
+          }}
+        >
+          <Tooltip title="Edit">
             <IconButton
-              size="small"
-              onClick={() => onDelete(dish.id)}
-              color="secondary"
+              size="medium"
+              onClick={() => onEdit(dish)}
+              color="primary"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(33, 150, 243, 0.1)",
+                },
+              }}
             >
-              <DeleteIcon fontSize="small" />
+              <EditIcon />
             </IconButton>
-          </Grid>
-        */}
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              size="medium"
+              onClick={() => onDelete(dish.orderItemId)}
+              color="secondary"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(244, 67, 54, 0.1)",
+                },
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+        {/* Calculated Price */}
+        <Grid
+          item
+          xs={3}
+          sm={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end", // Aligns the price to the right
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            {dish.orderItemQty} x $
+            {(dish.dishPrice + dish.orderSurcharge).toFixed(2)}
+          </Typography>
+          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+            $
+            {(
+              dish.orderItemQty *
+              (dish.dishPrice + dish.orderSurcharge)
+            ).toFixed(2)}
+          </Typography>
+        </Grid>
       </Grid>
     </Box>
   );
 }
+
+const handleDelete = async (orderItemId) => {
+  axios
+    .delete(`http://localhost:8600/order-item/${orderItemId}`)
+    .then((response) => {
+      console.log("Item deleted successfully", response);
+      window.location.reload();
+      // You can perform any additional actions here if needed.
+    })
+    .catch((error) => {
+      console.error("Error deleting item", error);
+    });
+};
+
+const handleUpdateQuantity = async (orderItemId, orderItemQty) => {
+  const payload = {
+    orderItemId: orderItemId,
+    orderItemQty: Number(orderItemQty),
+  };
+
+  axios
+    .put("http://localhost:8600/order-item", payload)
+    .then((response) => {
+      console.log("Item updated successfully", response);
+      window.location.reload();
+      // You can perform any additional actions here if needed.
+    })
+    .catch((error) => {
+      console.error("Error updating item", error);
+    });
+};
 
 export default function Cart() {
   const { cart, removeItem, updateItem } = useCart();
@@ -93,7 +200,7 @@ export default function Cart() {
 
   // fetch cart items from API
   const [data, setData] = useState({
-    orderId: ORDER_ID_SESSION,
+    orderId: 0,
     orderItems: [],
     orderTotal: 0.0,
   });
@@ -102,10 +209,10 @@ export default function Cart() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8600/customer-order/${ORDER_ID_SESSION}`)
+      .get(`http://localhost:8600/customer-order/${CUSTOMER_ID_GLOBAL}`)
       .then((response) => {
         setData(response.data);
-        console.log("cart data is:", response.data);
+        // console.log("cart data is:", response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -114,21 +221,24 @@ export default function Cart() {
       });
   }, []);
 
-  const handleDelete = (id) => removeItem(id);
+  // const handleDelete = (id) => removeItem(id);
+
   const handleEdit = (dish) => {
     setEditingDish(dish);
-    setNewQuantity(dish.quantity);
+    setNewQuantity(dish.orderItemQty);
     setEditModalOpen(true);
   };
 
   const handleUpdate = () => {
     if (editingDish) {
-      updateItem(editingDish.id, { ...editingDish, quantity: newQuantity });
+      handleUpdateQuantity(editingDish.orderItemId, newQuantity);
+      // updateItem(editingDish.id, { ...editingDish, quantity: newQuantity });
       setEditModalOpen(false);
       setEditingDish(null);
     }
   };
 
+  const checkOutButtonState = data.orderItems.length === 0;
   const cartTotal = data.orderTotal;
   const serviceFees = 0.1 * cartTotal;
   const total = cartTotal + serviceFees;
@@ -180,7 +290,7 @@ export default function Cart() {
           )}
         </List>
         <Box sx={{ mt: 3 }}>
-          <ListItem>
+          <ListItem sx={{ pb: 0 }}>
             <Grid container justifyContent="space-between">
               <Typography variant="subtitle1">Subtotal</Typography>
               <Typography variant="subtitle1">
@@ -188,7 +298,7 @@ export default function Cart() {
               </Typography>
             </Grid>
           </ListItem>
-          <ListItem>
+          <ListItem sx={{ pt: 0 }}>
             <Grid container justifyContent="space-between">
               <Typography variant="subtitle1">Service Fees</Typography>
               <Typography variant="subtitle1">
@@ -224,7 +334,8 @@ export default function Cart() {
               variant="contained"
               color="primary"
               size="large"
-              to={{ pathname: "/receipt", state: { cartData: cart } }}
+              to={{ pathname: `/payment/${data.orderId}` }}
+              disabled={checkOutButtonState}
             >
               Check Out
             </Button>
@@ -251,8 +362,8 @@ export default function Cart() {
               label="Quantity"
               type="number"
               InputProps={{ inputProps: { min: 1 } }}
-              // value={newQuantity}
-              // onChange={(e) => setNewQuantity(e.target.value)}
+              value={newQuantity}
+              onChange={(e) => setNewQuantity(e.target.value)}
               variant="outlined"
               fullWidth
               size="small"

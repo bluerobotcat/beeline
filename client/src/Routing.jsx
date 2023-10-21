@@ -15,6 +15,7 @@ import ResetPassword from "./customer/pages/ResetPassword";
 import LogIn from "./customer/pages/LogIn";
 import SignUp from "./customer/pages/SignUp";
 import DishSelection from "./customer/pages/DishSelection";
+import MockPayment from "./customer/pages/MockPayment";
 import Receipt from "./customer/pages/Receipt";
 
 import VendorLandingPage from "./vendor/pages/VendorLandingPage";
@@ -31,47 +32,70 @@ import VendorAccount from "./vendor/pages/VendorAccount";
 import VendorAddNewDish from "./vendor/pages/VendorAddNewDish";
 import VendorTransactions from "./vendor/pages/VendorTransactions";
 
-export default function Routing() {
+import { VENDOR_BOOL } from "./SessionID";
+
+function NotFound() {
   return (
     <div>
-      <Routes>
-        {/* Customer */}
-        <Route path="/" element={<Home />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/faq" element={<Information />} />
-        <Route path="/aboutus" element={<AboutUs />} />
-        <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/vendorsite" element={<VendorSite />} />
-        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-        <Route path="/termsconditions" element={<TermsConditions />} />
-        <Route path="/dashboard" element={<AccountDashboard />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        {/* <Route path="/dishselection" element={<DishSelection />} /> */}
-        <Route path="/dishselection/:itemId" element={<DishSelection />} />
-        <Route path="/receipt" element={<Receipt />} />
-
-        {/* Vendor */}
-        <Route path="/vendor" element={<VendorLandingPage />} />
-        <Route path="/vendordashboard" element={<VendorDashboard />} />
-        <Route path="/vendororders" element={<VendorOrders />} />
-        <Route path="/vendormenu" element={<VendorMenu />} />
-        <Route path="/vendoraddnewdish" element={<VendorAddNewDish />} />
-        <Route path="/vendorinventory" element={<VendorInventory />} />
-        <Route path="/vendoraccount" element={<VendorAccount />} />
-        <Route path="/vendoranalytics" element={<VendorAnalytics />} />
-        <Route path="/vendorcontact" element={<VendorContact />} />
-        <Route path="/vendorsettings" element={<VendorSettings />} />
-        <Route path="/vendorsignup" element={<VendorSignUp />} />
-        <Route path="/vendorlogin" element={<VendorLogIn />} />
-        <Route path="/vendortransactions" element={<VendorTransactions />} />
-      </Routes>
+      <h2>404 - Page Not Found</h2>
+      <p>The requested page does not exist.</p>
     </div>
   );
+}
+
+export default function Routing() {
+  if (!VENDOR_BOOL) {
+    return (
+      <div>
+        {/* Customer */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/faq" element={<Information />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/vendorsite" element={<VendorSite />} />
+          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="/termsconditions" element={<TermsConditions />} />
+          <Route path="/dashboard" element={<AccountDashboard />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          {/* <Route path="/dishselection" element={<DishSelection />} /> */}
+          <Route path="/dishselection/:itemId" element={<DishSelection />} />
+          <Route path="/payment/:orderId" element={<MockPayment />} />
+          <Route path="/receipt/:orderId" element={<Receipt />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        {/* Vendor */}
+        <Routes>
+          <Route path="/" element={<VendorLandingPage />} />
+          <Route path="/vendor" element={<VendorLandingPage />} />
+          <Route path="/vendordashboard" element={<VendorDashboard />} />
+          <Route path="/vendororders" element={<VendorOrders />} />
+          <Route path="/vendormenu" element={<VendorMenu />} />
+          <Route path="/vendoraddnewdish" element={<VendorAddNewDish />} />
+          <Route path="/vendorinventory" element={<VendorInventory />} />
+          <Route path="/vendoraccount" element={<VendorAccount />} />
+          <Route path="/vendoranalytics" element={<VendorAnalytics />} />
+          <Route path="/vendorcontact" element={<VendorContact />} />
+          <Route path="/vendorsettings" element={<VendorSettings />} />
+          <Route path="/vendorsignup" element={<VendorSignUp />} />
+          <Route path="/vendorlogin" element={<VendorLogIn />} />
+          <Route path="/vendortransactions" element={<VendorTransactions />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    );
+  }
 }
 
 // export default function Layout() {

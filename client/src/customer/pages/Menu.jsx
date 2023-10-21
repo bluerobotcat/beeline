@@ -85,7 +85,11 @@ export function DishCard({ dish }) {
         <CardMedia
           component="img"
           height="140"
-          image={`${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`}
+          image={
+            dish.dishImgPath.startsWith("http")
+              ? dish.dishImgPath
+              : `${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`
+          }
           alt={dish.dishName}
           sx={{ objectFit: "cover" }}
         />

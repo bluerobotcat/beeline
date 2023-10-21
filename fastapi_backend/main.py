@@ -30,18 +30,18 @@ def read_root():
 
 ### CUSTOMER APIS ###
 
-class PostOrderItem(BaseModel):
-    orderItemId: int = None
-    orderId: int
-    dishId: int
-    orderItemQty: int
-    orderModifier: str
-    orderSurcharge: float
 
-
-class PutOrderItem(BaseModel):
-    orderItemId: int
-    orderItemQty: int
+def get_order_id_by_customer_id(customerId):
+    cursor = conn.cursor()
+    query = """
+    SELECT orderId
+    FROM customerorder
+    WHERE customerorder.customerId=%s AND customerorder.orderStatus=%s
+    """
+    cursor.execute(query, (customerId, 'Unsubmitted'))
+    record = cursor.fetchone()
+    cursor.close()
+    return record[0]
 
 
 @app.get("/all-dishes")
@@ -76,19 +76,33 @@ def get_dish_by_id(dishId: int):
     return transform_dish_item(record)
 
 
+class PostOrderItem(BaseModel):
+    customerId: int
+    dishId: int
+    orderItemQty: int
+    orderModifier: str
+    orderSurcharge: float
+
+
 @app.post("/order-item")
 def post_order_item(data: PostOrderItem):
     # Expect json keys: orderId, dishId, orderItemQty
+    orderId = get_order_id_by_customer_id(data.customerId)
     cursor = conn.cursor()
     query = """
     INSERT INTO orderitem (orderId, dishId, orderItemQty, orderModifier, orderSurcharge)
     VALUES (%s, %s, %s, %s, %s)
     """
-    cursor.execute(query, (data.orderId, data.dishId,
+    cursor.execute(query, (orderId, data.dishId,
                    data.orderItemQty, data.orderModifier, data.orderSurcharge))
     conn.commit()
     cursor.close()
     return SUCCESS_MESSAGE
+
+
+class PutOrderItem(BaseModel):
+    orderItemId: int
+    orderItemQty: int
 
 
 @app.put("/order-item")
@@ -113,24 +127,128 @@ def delete_order_item(orderItemId: int):
     return SUCCESS_MESSAGE
 
 
-@app.get("/customer-order/{orderId}")
-def get_customer_order_by_id(orderId: int):
-    # Expects orderId at endpoint
+@app.get("/customer-order/{customerId}")
+def get_customer_order_by_id(customerId: int):
+    # Expects customerId at endpoint
     cursor = conn.cursor()
     query = """
-    SELECT customerorder.orderId, orderItemId, dish.dishId, dishName, dishPrice, orderItemQty, orderModifier, orderSurcharge
+    SELECT customerorder.orderId, orderItemId, dish.dishId, dishName, dishImgPath, dishPrice, orderItemQty, orderModifier, orderSurcharge
     FROM customerorder, orderitem, dish
-    WHERE customerorder.orderId=%s AND customerorder.orderId=orderitem.orderId AND orderitem.dishId=dish.dishId 
+    WHERE customerorder.customerId=%s AND customerorder.orderStatus=%s AND customerorder.orderId=orderitem.orderId AND orderitem.dishId=dish.dishId 
     ORDER BY dishName
     """
-    cursor.execute(query, (orderId,))
+    cursor.execute(query, (customerId, 'Unsubmitted'))
     record = cursor.fetchall()
     cursor.close()
     check_data(record, 'cart is empty')
     return transform_customer_order(record)
 
 
+@app.get("/customer-order-count/{customerId}")
+def get_customer_order_count(customerId: int):
+    # Expects customerId at endpoint
+    orderId = get_order_id_by_customer_id(customerId)
+    cursor = conn.cursor()
+    query = """
+    SELECT SUM(orderItemQty)
+    FROM orderitem
+    WHERE orderId=%s
+    """
+    cursor.execute(query, (orderId,))
+    record = cursor.fetchone()
+    cursor.close()
+    return transform_customer_order_count(record)
+
+
+class PutSubmitOrder(BaseModel):
+    orderId: int
+    customerId: int
+    orderType: str
+    paymentType: str
+    orderDateTime: str
+
+
+@app.put("/submit-order")
+def update_order_item(data: PutSubmitOrder):
+    # Expect json keys: customerId, orderType, paymentType, orderDateTime
+    orderTotal = get_customer_order_by_id(data.customerId)['orderTotal']
+    correctedDateTime = data.orderDateTime[:10] + \
+        ' ' + data.orderDateTime[11:19]
+    cursor = conn.cursor()
+    query = """
+    UPDATE customerorder
+    SET orderStatus=%s, orderType=%s, paymentType=%s, orderTotal=%s, orderDateTime=%s
+    WHERE orderId=%s
+    """
+    cursor.execute(query, ('Pending', data.orderType, data.paymentType,
+                   orderTotal, correctedDateTime, data.orderId))
+    conn.commit()
+    query = """
+    INSERT INTO customerorder (customerId, orderStatus)
+    VALUES (%s, %s)
+    """
+    cursor.execute(query, (data.customerId, 'Unsubmitted'))
+    record = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    return SUCCESS_MESSAGE
+
+
+@app.get("/receipt/{orderId}")
+def get_receipt_by_id(orderId: int):
+    # Expects orderId at endpoint
+    cursor = conn.cursor()
+    query = """
+    SELECT customerorder.orderId, orderDateTime, orderType, paymentType, orderTotal, dishName, dishPrice, orderItemQty, orderModifier, orderSurcharge
+    FROM customerorder, orderitem, dish
+    WHERE orderitem.orderId=%s AND customerorder.orderId=orderitem.orderId AND orderitem.dishId=dish.dishId 
+    ORDER BY dishName
+    """
+    cursor.execute(query, (orderId,))
+    record = cursor.fetchall()
+    cursor.close()
+    check_data(record, 'cart is empty')
+    return transform_receipt(record)
+
+
 ### VENDOR APIS ###
+
+
+@app.get("/view-orders/{storeId}")
+def get_store_orders_by_id(storeId: int):
+    # Expects storeId at endpoint
+    cursor = conn.cursor()
+    query = """
+    SELECT dish.storeId, customerorder.orderId, orderStatus, orderDateTime, customerName, orderType, paymentType, dishName, orderItemQty, orderModifier
+    FROM customerorder, customer, orderitem, dish
+    WHERE dish.storeId=%s AND orderStatus IN ('Pending', 'Completed')
+        AND customerorder.customerId=customer.customerId AND customerorder.orderId=orderitem.orderId AND orderitem.dishId=dish.dishId
+    ORDER BY orderStatus, orderDateTime, customerName, dishName
+    """
+    cursor.execute(query, (storeId,))
+    record = cursor.fetchall()
+    cursor.close()
+    check_data(record, 'cart is empty')
+    return transform_store_orders(record)
+
+
+### DEVELOPMENT APIS ###
+
+@app.get("/dev/add-customer/{customerId}")
+def dev_add_customer(customerId: int):
+    # Expects customerId at endpoint
+    cursor = conn.cursor()
+    query = """
+    INSERT INTO customerorder (customerId, orderStatus)
+    VALUES (%s, %s)
+    """
+    cursor.execute(query, (customerId, 'Unsubmitted'))
+    record = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    return SUCCESS_MESSAGE
+
+
 if __name__ == "__main__":
 
     import uvicorn

@@ -3,6 +3,6 @@ import mysql.connector
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="@1234567",
+    password="password",
     database="beeline2"
 )

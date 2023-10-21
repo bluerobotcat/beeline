@@ -1,0 +1,104 @@
+ingredientId,ingredientName,ingredientQty,ingredientMin,ingredientMax,expiryDate,ingredientUnit
+1,Chicken,500,100,1000,30/11/2024,grams
+2,Ginger,50,10,150,30/11/2024,grams
+3,Garlic,30,5,60,30/9/2024,cloves
+4,Chicken stock,500,100,1000,30/10/2024,ml
+5,Rice,500,100,1000,31/12/2024,grams
+6,Salt,20,5,40,31/12/2025,grams
+7,Sesame oil,100,20,200,30/11/2024,ml
+8,Soy sauce,100,20,200,30/11/2024,ml
+9,Red chilies,50,10,150,30/8/2024,grams
+10,Lime juice,50,10,150,15/9/2024,ml
+11,Sugar,100,10,300,31/12/2025,grams
+12,Flat rice noodles,500,100,1000,30/11/2024,grams
+13,Prawns,300,100,600,15/8/2024,grams
+14,Bloody cockles,200,50,400,10/8/2024,grams
+15,Eggs,5,1,12,30/7/2024,unit
+16,Chinese sausage,200,50,500,30/9/2024,grams
+17,Bean sprouts,150,30,300,15/7/2024,grams
+18,Chives,50,10,150,5/8/2024,grams
+19,Dark soy sauce,100,20,200,30/10/2024,ml
+20,Light soy sauce,100,20,200,30/11/2024,ml
+21,Chili paste,100,20,250,31/12/2024,grams
+22,Oysters,200,50,400,10/8/2024,grams
+23,Flour,500,100,1000,31/12/2025,grams
+24,Pepper,30,5,70,31/12/2025,grams
+25,Oil,500,100,1000,31/12/2024,ml
+26,Yellow noodles,500,100,1000,30/10/2024,grams
+27,Rice vermicelli,400,80,800,30/11/2024,grams
+28,Squid,300,100,600,20/8/2024,grams
+29,Pork belly,400,80,800,15/10/2024,grams
+30,Fish sauce,100,20,200,31/12/2024,ml
+31,Chili,50,10,150,30/8/2024,grams
+32,Vermicelli,400,80,800,30/10/2024,grams
+33,Coconut milk,400,100,800,30/9/2024,ml
+34,Shrimp,300,100,600,15/8/2024,grams
+35,Fish cake,250,50,500,25/9/2024,grams
+36,Spices,100,10,300,31/12/2025,grams
+37,Fish,400,100,800,25/8/2024,grams
+38,Banana leaves,10,1,20,15/7/2024,leaves
+39,Turmeric,50,10,150,31/12/2024,grams
+40,Lemongrass,50,10,150,15/9/2024,stalks
+41,Peanut sauce,150,30,300,31/10/2024,ml
+42,Beef,500,100,1000,5/10/2024,grams
+43,Mutton,500,100,1000,5/10/2024,grams
+44,Ghee,200,40,400,31/12/2024,ml
+45,Meat/vegetables,500,100,1000,30/9/2024,grams
+46,Curry powder,100,10,300,31/12/2025,grams
+47,Egg noodles,500,100,1000,30/10/2024,grams
+48,Pork,500,100,1000,15/10/2024,grams
+49,Leafy greens,200,40,400,25/7/2024,grams
+50,Pork shoulder,400,80,800,15/10/2024,grams
+51,Honey,150,30,300,31/12/2024,ml
+52,Preserved radish,100,20,200,31/12/2024,grams
+53,Turnip,200,50,400,30/8/2024,grams
+54,Dried shrimp,100,20,200,30/11/2024,grams
+55,Mushrooms,200,40,400,25/8/2024,grams
+56,Glutinous rice,500,100,1000,31/12/2024,grams
+57,Peanuts,200,40,400,15/11/2024,grams
+58,Shallots,100,20,200,25/8/2024,grams
+59,Pandan leaves,10,2,25,20/7/2024,leaves
+60,Shrimp paste,100,20,200,31/12/2024,grams
+61,Chicken wings,500,100,2500,25/10/2025,grams
+62,Lettuce,100,20,500,1/11/2024,grams
+63,Hoisin sauce,250,50,1250,20/12/2024,ml
+64,Popiah skin,20,4,100,1/1/2025,pieces
+65,Pastry cups,25,5,125,15/11/2025,pieces
+66,Tofu,300,60,1500,1/12/2024,grams
+67,Lime,100,20,500,1/2/2025,pieces
+68,Ground beef,500,100,2500,20/10/2024,grams
+69,Cabbage,200,40,1000,10/11/2024,grams
+70,Cucumber,150,30,750,15/10/2025,grams
+71,Chinese herbs,50,10,250,20/1/2025,grams
+72,Yeast,20,4,100,30/10/2024,grams
+73,Baking soda,50,10,250,25/12/2024,grams
+74,Pineapple,500,100,2500,10/1/2025,grams
+75,Fried dough,200,40,1000,20/11/2024,pieces
+76,Boiled egg,50,10,250,5/2/2025,pieces
+77,Cuttlefish,300,60,1500,15/12/2025,grams
+78,Shrimp fritters,200,40,1000,10/10/2024,pieces
+79,Carrot,200,40,1000,20/11/2025,grams
+80,Fish fillets,500,100,2500,1/12/2025,grams
+81,Batter,300,60,1500,20/12/2024,grams
+82,Tartar sauce,250,50,1250,5/1/2025,ml
+83,Lemon,100,20,500,25/10/2024,pieces
+84,Fries,500,100,2500,5/11/2025,grams
+85,Chicken thigh,500,100,2500,20/10/2025,grams
+86,Olive oil,500,100,2500,15/12/2024,ml
+87,Herbs,50,10,250,5/11/2024,grams
+88,Vegetables,500,100,2500,1/2/2025,grams
+89,Mashed potato,300,60,1500,20/1/2025,grams
+90,Spaghetti,500,100,2500,25/11/2024,grams
+91,Chili flakes,30,6,150,10/12/2024,grams
+92,Parsley,30,6,150,15/1/2025,grams
+93,Parmesan cheese,200,40,1000,15/10/2024,grams
+94,Beef cut (ribeye),500,100,2500,10/11/2025,grams
+95,Butter,250,50,1250,30/10/2025,grams
+96,Romaine lettuce,100,20,500,5/2/2025,grams
+97,Chicken breast,500,100,2500,25/1/2025,grams
+98,Croutons,100,20,500,15/11/2024,grams
+99,Caesar dressing,250,50,1250,5/12/2025,ml
+100,Anchovies,100,20,500,5/10/2024,grams
+101,Rice flour,500,100,2500,30/11/2025,grams
+102,Water,1000,200,5000,20/12/2025,ml
+103,White radish,300,60,1500,10/11/2024,grams

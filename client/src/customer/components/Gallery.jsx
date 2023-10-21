@@ -12,10 +12,15 @@ export default function Gallery() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="100%" height="auto" width="100vm">
-        <ImageList cols={1} sx={{ width: "auto", height: "50vh" }}>
-          <ImageListItem>
-            <img src={food1} alt="food" loading="lazy" />
+      <div style={{ width: "100%" }}>
+        <ImageList cols={1} sx={{ width: "100%", height: "auto" }}>
+          <ImageListItem sx={{ width: "100%" }}>
+            <img
+              src={food1}
+              alt="food"
+              loading="lazy"
+              style={{ width: "100%", height: "auto" }}
+            />
             <ImageListItemBar
               Width="100%"
               title="food"
@@ -32,7 +37,12 @@ export default function Gallery() {
           </ImageListItem>
 
           <ImageListItem>
-            <img src={food1} alt="food" loading="lazy" />
+            <img
+              src={food1}
+              alt="food"
+              loading="lazy"
+              style={{ width: "100%", height: "auto" }}
+            />
             <ImageListItemBar
               Width="100%"
               title="food"
@@ -48,7 +58,7 @@ export default function Gallery() {
             />
           </ImageListItem>
         </ImageList>
-      </Container>
+      </div>
     </React.Fragment>
   );
 }

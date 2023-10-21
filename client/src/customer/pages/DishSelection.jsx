@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -23,9 +25,11 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import { useCart } from "./CartProvider";
-import { ORDER_ID_SESSION } from "./SessionID";
+import { CUSTOMER_ID_GLOBAL } from "../../SessionID";
 
 export default function DishSelection({ dish: propDish }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
   const dish = propDish ||
     location.state?.dish || {
@@ -40,9 +44,10 @@ export default function DishSelection({ dish: propDish }) {
       ],
       mainIngredients: [
         { name: "Ingredient One", price: 0 },
-        { name: "Ingredient Two", price: 2 },
-        { name: "Ingredient Three", price: 3 },
+        { name: "Ingredient Two", price: 0 },
+        { name: "Ingredient Three", price: 0 },
       ],
+
       addOns: [
         { name: "Add-Ons One", price: 1 },
         { name: "Add-Ons Two", price: 1 },
@@ -52,9 +57,9 @@ export default function DishSelection({ dish: propDish }) {
 
   const [quantity, setQuantity] = useState(1);
 
-  const [selectedMainIngredients, setSelectedMainIngredients] = useState([]);
-
-  const [selectedMainIngredient, setSelectedMainIngredient] = useState([]);
+  const [selectedMainIngredients, setSelectedMainIngredients] = useState(
+    dish.mainIngredients.map((_, idx) => idx)
+  );
 
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const defaultSizeId = dish.sizes && dish.sizes[0] ? dish.sizes[0].id : null;
@@ -136,8 +141,6 @@ export default function DishSelection({ dish: propDish }) {
 
   const surchargePrice = totalPrice - data.dishPrice;
 
-  // total modifier text
-
   const totalSizeMod = selectedSizes
     ? selectedSizes.reduce(
         (acc, selectedSize) =>
@@ -160,12 +163,14 @@ export default function DishSelection({ dish: propDish }) {
       )
     : "";
 
+  // total modifier text
+
   const totalModifiers =
     totalSizeMod + totalMainIngredientsMod + totalAddOnsMod;
 
   const handleAddToCart = async () => {
     const cartDataToPost = {
-      orderId: ORDER_ID_SESSION,
+      customerId: CUSTOMER_ID_GLOBAL,
       dishId: number,
       orderItemQty: quantity,
       orderModifier: totalModifiers.length > 0 ? totalModifiers.slice(2) : "",
@@ -184,20 +189,35 @@ export default function DishSelection({ dish: propDish }) {
     }
   };
 
+  const handleMainIngredientChange = (idx) => {
+    if (selectedMainIngredients.includes(idx)) {
+      // Prevent unchecking if it's the only one checked
+      if (selectedMainIngredients.length === 1) {
+        return;
+      }
+      setSelectedMainIngredients((prevState) =>
+        prevState.filter((i) => i !== idx)
+      );
+    } else {
+      setSelectedMainIngredients((prevState) => [...prevState, idx]);
+    }
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minHeight: "100vh",
-        py: 3,
+        justifyContent: "center",
+        minHeight: { xs: "90vh", md: "80vh" }, // Adjust height for mobile vs desktop
+        py: 1,
+        px: { xs: 1, md: 3 }, // Adjust horizontal padding for mobile vs desktop
       }}
     >
       <Card
         sx={{
-          maxWidth: "500px",
-          width: "100%",
+          width: { xs: "95%", md: "500px" }, // Full width on mobile, fixed width on desktop
           mx: "auto",
           my: 2,
           boxShadow: 3,
@@ -206,10 +226,14 @@ export default function DishSelection({ dish: propDish }) {
         <CardMedia
           component="img"
           sx={{ width: "100%", maxHeight: "300px", objectFit: "cover" }}
-          image={`${process.env.PUBLIC_URL}/images/${dish.dishImgPath}`}
+          image={
+            data.dishImgPath.startsWith("http")
+              ? data.dishImgPath
+              : `${process.env.PUBLIC_URL}/images/${data.dishImgPath}`
+          }
           alt={data.dishName}
         />
-        <CardContent>
+        <CardContent sx={{ padding: "16px 32px" }}>
           <Typography variant="h5" component="div">
             {data.dishName}
           </Typography>
@@ -257,18 +281,11 @@ export default function DishSelection({ dish: propDish }) {
                       key={idx}
                       control={
                         <Checkbox
-                          checked={selectedMainIngredient.includes(idx)}
-                          onChange={() =>
-                            handleSingleSelectionChange(
-                              setSelectedMainIngredient,
-                              idx
-                            )
-                          }
+                          checked={selectedMainIngredients.includes(idx)}
+                          onChange={() => handleMainIngredientChange(idx)}
                         />
                       }
-                      label={`${ingredient.name} (+$${ingredient.price.toFixed(
-                        2
-                      )})`}
+                      label={ingredient.name} // Removed the price display
                     />
                   ))}
                 </Box>
