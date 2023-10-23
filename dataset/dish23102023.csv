@@ -1,0 +1,29 @@
+dishId,dishName,dishDescription,dishPrice,dishAvailable,dishImgPath,storeId
+1,"Chicken Rice","Tender chicken served with flavorful rice",3.50,1,food1.jpg,1
+2,"Hainanese Chicken","Poached chicken with soy sauce and sesame oil",18.00,1,food2.jpg,1
+3,"Carrot Cake","A stir-fried dish made from radish cake cubes, often with eggs and preserved radish",4.00,1,food3.jpg,2
+4,"Char Kway Teow","Stir-fried flat rice noodles with shrimp, bloody cockles, and egg",5.00,1,food4.jpg,2
+5,"Fried Oysters","Deep-fried oysters in batter",6.00,1,food5.jpg,2
+6,"Hokkien Mee","Stir-fried prawn noodles",5.00,1,food6.jpg,2
+7,Laksa,"Noodles in spicy coconut soup",4.00,1,food7.jpg,3
+8,"Fish Balls Noodles","Spongy fish balls served with noodles",4.00,1,food8.jpg,3
+9,Otah,"Grilled fish cake wrapped in banana leaves",1.00,1,food9.jpg,7
+10,Satay,"Grilled skewers with peanut sauce",1.00,1,food10.jpg,7
+11,"Ice Kachang","Red bean shaved ice",2.50,1,food11.jpg,4
+12,Chendol,"Shaved ice with coconut milk",3.00,1,food12.jpg,4
+13,"Plain Prata","Flaky Indian flatbread",1.00,1,food13.jpg,5
+14,"Egg Prata","Prata with a beaten egg filling",1.50,1,food14.jpg,5
+15,"Tissue Prata","Super thin, crisp prata in the shape of a giant cone and with a caramelised skin",4.00,1,food15.jpg,5
+16,"Wanton Mee","Noodles with pork dumplings",4.00,1,food16.jpg,6
+17,"Fried Wanton","Deep-fried dumplings",5.00,1,food17.jpg,6
+18,"Char Siew","Roasted pork",6.00,0,food18.jpg,6
+19,"Nasi Lemak","Fragrant rice dish cooked in coconut milk and pandan leaf, served with various side dishes",2.50,0,food19.jpg,7
+20,"Fried Chicken Wings","Crispy deep-fried wings",2.00,0,food20.jpg,7
+21,"Bak Kut Teh","Pork rib soup with spices",5.00,1,food21.jpg,8
+22,"You Tiao","Fried dough fritters",1.50,1,food22.jpg,8
+23,"Braised Peanuts","Soft peanuts in soy sauce",2.30,1,food23.jpg,8
+24,"Fish & Chips","Deep-fried fish fillet served with fries",7.00,1,food24.jpg,9
+25,"Grilled Chicken Chop","Grilled chicken served with mashed potatoes and veggies",6.50,0,food25.jpg,9
+26,"Pasta Aglio e Olio","Spaghetti with garlic, chili, and olive oil",5.80,1,food26.jpg,9
+27,"Beef Steak","Juicy grilled beef steak",7.90,0,food27.jpg,9
+28,"Chicken Caesar Salad","Salad with chicken, romaine lettuce, and Caesar dressing",5.60,0,food28.jpg,9

@@ -174,7 +174,7 @@ export default function DishSelection({ dish: propDish }) {
       dishId: number,
       orderItemQty: quantity,
       orderModifier: totalModifiers.length > 0 ? totalModifiers.slice(2) : "",
-      orderSurcharge: Math.round(surchargePrice, 2),
+      orderSurcharge: surchargePrice,
     };
 
     try {

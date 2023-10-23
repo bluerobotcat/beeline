@@ -11,8 +11,8 @@ export default function Home() {
     <div>
       {/* <Gallery /> */}
       <GalleryToo />
-      <Divider />
-      <StoreNav />
+      {/* <Divider />
+      <StoreNav /> */}
       <Divider />
       <Menu />
       {/* <p>

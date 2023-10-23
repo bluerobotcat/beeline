@@ -1,34 +1,16 @@
-import * as React from "react";
+import React from "react";
 import { useTheme } from "@mui/material/styles";
 import { Box, Button, MobileStepper, Paper, Typography } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
+import top1 from "../images/top1.JPG";
+import top2 from "../images/top2.JPG";
+import top3 from "../images/top3.JPG";
+import top4 from "../images/top4.JPG";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const images = [
-  {
-    label: "Delicious Pasta Carbonara",
-    imgPath:
-      "https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-  {
-    label: "Crispy Fried Chicken",
-    imgPath:
-      "https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-  {
-    label: "Refreshing Fruit Salad",
-    imgPath:
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250",
-  },
-  {
-    label: "Creamy Vanilla Ice Cream",
-    imgPath:
-      "https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-];
 export default function SwipeableTextMobileStepper() {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -39,6 +21,28 @@ export default function SwipeableTextMobileStepper() {
 
   const handleStepChange = (step) => setActiveStep(step);
 
+  const images = [
+    {
+      dishName: "Chicken Rice",
+      storeName: "Chicken Rise",
+      imgPath: top1,
+    },
+    {
+      dishName: "Chicken Wings",
+      storeName: "Muslim Delight",
+      imgPath: top2,
+    },
+    {
+      dishName: "Hokkien Prawn Mee",
+      storeName: "Wok Fragrance",
+      imgPath: top3,
+    },
+    {
+      dishName: "Fish & Chips",
+      storeName: "Western Grill",
+      imgPath: top4,
+    },
+  ];
   return (
     <Box
       sx={{
@@ -52,55 +56,69 @@ export default function SwipeableTextMobileStepper() {
     >
       <Box
         sx={{
-          width: { xs: "95%", sm: "90%", md: "90%", lg: "100%" },
-          height: { xs: "35vh", sm: "33vh", md: "31vh", lg: "29vh" },
+          width: "95%",
+          height: "33.33vh",
           mb: 3,
           overflow: "hidden",
           boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
           borderRadius: "10px",
         }}
       >
-        <AutoPlaySwipeableViews
-          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-          index={activeStep}
-          onChangeIndex={handleStepChange}
-          enableMouseEvents
-        >
-          {images.map((step, index) => (
-            <div key={step.label}>
-              {Math.abs(activeStep - index) <= 2 && (
-                <Box
-                  component="img"
-                  sx={{
-                    height: "80%",
-                    objectFit: "cover",
-                    width: "100%",
-                    borderRadius: "10px 10px 0 0",
-                    transition: "transform .2s",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                  src={step.imgPath}
-                  alt={step.label}
-                />
-              )}
-            </div>
-          ))}
-        </AutoPlaySwipeableViews>
-        <Paper
-          square
-          elevation={0}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            height: 50,
-            pl: 2,
-            fontSize: "1.2em",
+        <Box
+          style={{
+            height: "33.33vh",
+            width: "100%",
+            overflow: "hidden",
+            position: "relative",
           }}
         >
-          <Typography>{images[activeStep].label}</Typography>
-        </Paper>
+          <AutoPlaySwipeableViews
+            axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+            index={activeStep}
+            onChangeIndex={handleStepChange}
+            enableMouseEvents
+            interval={5000}
+          >
+            {images.map((step, index) => (
+              <div key={step.dishName}>
+                {Math.abs(activeStep - index) <= 2 && (
+                  <img
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      borderRadius: "10px",
+                      transition: "transform .2s",
+                    }}
+                    src={step.imgPath}
+                    alt={step.dishName}
+                  />
+                )}
+              </div>
+            ))}
+          </AutoPlaySwipeableViews>
+          <Paper
+            square
+            elevation={0}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: 50,
+              pl: 2,
+              fontSize: "1em",
+              position: "absolute",
+              bottom: 0,
+              width: "100%",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              color: "white",
+            }}
+          >
+            <Typography>
+              {images[activeStep].dishName} from {images[activeStep].storeName}
+            </Typography>
+          </Paper>
+        </Box>
         <MobileStepper
           steps={images.length}
           position="static"
@@ -109,7 +127,11 @@ export default function SwipeableTextMobileStepper() {
             <Button
               variant="contained"
               color="primary"
-              size="small"
+              size="medium"
+              sx={{
+                fontSize: "1em",
+                padding: "8px 16px",
+              }}
               onClick={() => handleNavigation(1)}
               disabled={activeStep === images.length - 1}
             >
@@ -121,7 +143,11 @@ export default function SwipeableTextMobileStepper() {
             <Button
               variant="contained"
               color="primary"
-              size="small"
+              size="medium"
+              sx={{
+                fontSize: "1em",
+                padding: "8px 16px",
+              }}
               onClick={() => handleNavigation(-1)}
               disabled={activeStep === 0}
             >
@@ -131,10 +157,6 @@ export default function SwipeableTextMobileStepper() {
           }
           sx={{
             backgroundColor: "rgba(0,0,0,0.7)",
-            "& .MuiButton-sizeSmall": {
-              fontSize: "1em",
-              color: theme.palette.common.white,
-            },
           }}
         />
       </Box>
