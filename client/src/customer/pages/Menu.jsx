@@ -80,7 +80,7 @@ export function MenuItem({ store }) {
 export function DishCard({ dish }) {
   // console.log(dish);
   return (
-    <Card sx={{ maxWidth: 280, margin: "auto" }}>
+    <Card sx={{ maxWidth: 280, height: "100%", margin: "auto" }}>
       <CardActionArea>
         <CardMedia
           component="img"

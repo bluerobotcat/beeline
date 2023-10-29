@@ -40,45 +40,46 @@ export default function VendorSales() {
   };
 
   useEffect(() => {
+    const todayDate = new Date().toISOString().split("T")[0]; // Gets today's date in "YYYY-MM-DD" format
     // Mock data for sales
     const salesData = [
       {
-        date: "2023-10-02",
+        date: todayDate,
         store: "Store A",
         dish: "Dish 1",
         sales: 25,
         price: 5,
       },
       {
-        date: "2023-10-01",
+        date: todayDate,
         store: "Store B",
         dish: "Dish 2",
         sales: 30,
         price: 7,
       },
       {
-        date: "2023-10-04",
+        date: todayDate,
         store: "Store A",
         dish: "Dish 3",
         sales: 15,
         price: 6,
       },
       {
-        date: "2023-10-04",
+        date: todayDate,
         store: "Store B",
         dish: "Dish 1",
         sales: 20,
         price: 5,
       },
       {
-        date: "2023-10-05",
+        date: todayDate,
         store: "Store A",
         dish: "Dish 2",
         sales: 28,
         price: 7,
       },
-      // ... add more data as needed
     ];
+    // ... add more data as needed
 
     const selectedDateTime = new Date(selectedDate);
 

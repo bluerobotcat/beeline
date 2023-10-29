@@ -62,7 +62,7 @@ export default function VendorDashboard() {
                   }}
                 >
                   <Typography variant="h6" fontWeight="bold">
-                    Order Status: ON
+                    Order Management
                   </Typography>
                 </Button>
               </Box>
@@ -74,7 +74,7 @@ export default function VendorDashboard() {
                     variant="contained"
                     size="large"
                     component={Link}
-                    to="/vendortransactions"
+                    to="/vendormenu"
                     color="secondary"
                     sx={{
                       width: "100%",
@@ -83,7 +83,7 @@ export default function VendorDashboard() {
                     }}
                   >
                     <Typography variant="h6" fontWeight="bold">
-                      Transactions
+                      Menu Management
                     </Typography>
                   </Button>
                 </Box>
@@ -104,7 +104,7 @@ export default function VendorDashboard() {
                   }}
                 >
                   <Typography variant="h6" fontWeight="bold">
-                    Inventory Level: LOW
+                    Inventory
                   </Typography>
                 </Button>
               </Box>
@@ -115,7 +115,7 @@ export default function VendorDashboard() {
                   variant="contained"
                   size="large"
                   component={Link}
-                  to="/vendoranalytics"
+                  to="/vendortransactions"
                   color="secondary"
                   sx={{
                     width: "100%",
@@ -124,7 +124,7 @@ export default function VendorDashboard() {
                   }}
                 >
                   <Typography variant="h6" fontWeight="bold">
-                    Analytics
+                    Transactions
                   </Typography>
                 </Button>
               </Box>

@@ -58,6 +58,7 @@ export default function MockPayment() {
       maxWidth="xs"
       maxheight="ys"
       style={{ height: "70vh" }}
+      alignItems="center"
     >
       <Box sx={{ mt: 4, textAlign: "center", minWidth: 300 }}>
         <Typography variant="h6">

@@ -31,6 +31,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { Link } from "react-router-dom";
 import Routing from "../../Routing";
 
@@ -100,9 +101,10 @@ export default function PersistentDrawerLeft() {
     <MenuBookIcon />,
     <Inventory2Icon />,
     <AnalyticsIcon />,
-    <AccountCircleIcon />,
-    <RecentActorsIcon />,
-    <SettingsIcon />,
+    <CurrencyExchangeIcon />,
+    // <AccountCircleIcon />,
+    // <RecentActorsIcon />,
+    // <SettingsIcon />,
   ];
 
   return (
@@ -124,6 +126,8 @@ export default function PersistentDrawerLeft() {
               style={{ height: "40px" }}
               src={BeeLineVendorLogo}
               alt="Beeline Vendor logo"
+              component={Link}
+              to="/vendor"
             />
 
             <IconButton
@@ -131,7 +135,7 @@ export default function PersistentDrawerLeft() {
               style={{ marginLeft: "auto" }}
               color="inherit"
               component={Link}
-              to="/account"
+              to="/vendorlogin"
             >
               <AccountCircleIcon />
             </IconButton>
@@ -172,13 +176,19 @@ export default function PersistentDrawerLeft() {
               { text: "Menu", path: "/vendormenu", iconIndex: 3 },
               { text: "Inventory", path: "/vendorinventory", iconIndex: 4 },
               {
+                text: "Transactions",
+                path: "/vendortransactions",
+                iconIndex: 6,
+              },
+              {
                 text: "Analytics",
                 path: "/vendoranalytics",
                 iconIndex: 5,
               },
-              { text: "Account", path: "/vendoraccount", iconIndex: 6 },
-              { text: "Contact", path: "/vendorcontact", iconIndex: 7 },
-              { text: "Settings", path: "/vendorsettings", iconIndex: 8 },
+
+              // { text: "Account", path: "/vendoraccount", iconIndex: 6 },
+              // { text: "Contact", path: "/vendorcontact", iconIndex: 7 },
+              // { text: "Settings", path: "/vendorsettings", iconIndex: 8 },
             ].map((item) => (
               <ListItem key={item.path} disablePadding>
                 <Link

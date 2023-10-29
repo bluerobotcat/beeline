@@ -150,8 +150,16 @@ export default function CustomerLayout() {
     { text: "Menu", path: "/menu", iconIndex: 2 },
     { text: "Cart", path: "/cart", iconIndex: 3 },
     { text: "Account", path: "/account", iconIndex: 4 },
-    { text: "Settings", path: "/settings", iconIndex: 5 },
   ];
+
+  //with settings
+  // const menuItems = [
+  //   { text: "Home", path: "/", iconIndex: 1 },
+  //   { text: "Menu", path: "/menu", iconIndex: 2 },
+  //   { text: "Cart", path: "/cart", iconIndex: 3 },
+  //   { text: "Account", path: "/account", iconIndex: 4 },
+  //   { text: "Settings", path: "/settings", iconIndex: 5 },
+  // ];
 
   // const [data, setData] = useState({ totalQty: 0 });
   // const [loading, setLoading] = useState(true);

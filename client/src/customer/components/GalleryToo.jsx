@@ -52,13 +52,16 @@ export default function SwipeableTextMobileStepper() {
         justifyContent: "center",
         width: "100%",
         mt: 0,
+        [theme.breakpoints.up("sm")]: {
+          height: "33.33vh", // 1/3 of the viewport height for screens larger than 'sm'
+        },
       }}
     >
       <Box
         sx={{
           width: "95%",
-          height: "33.33vh",
-          mb: 3,
+          height: "100%",
+          mb: 1,
           overflow: "hidden",
           boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
           borderRadius: "10px",
@@ -66,9 +69,8 @@ export default function SwipeableTextMobileStepper() {
       >
         <Box
           style={{
-            height: "33.33vh",
+            height: "100%",
             width: "100%",
-            overflow: "hidden",
             position: "relative",
           }}
         >
@@ -84,10 +86,9 @@ export default function SwipeableTextMobileStepper() {
                 {Math.abs(activeStep - index) <= 2 && (
                   <img
                     style={{
-                      height: "100%",
                       width: "100%",
-                      objectFit: "contain",
-                      objectPosition: "center",
+                      height: "100%",
+                      objectFit: "cover",
                       borderRadius: "10px",
                       transition: "transform .2s",
                     }}
@@ -119,46 +120,6 @@ export default function SwipeableTextMobileStepper() {
             </Typography>
           </Paper>
         </Box>
-        <MobileStepper
-          steps={images.length}
-          position="static"
-          activeStep={activeStep}
-          nextButton={
-            <Button
-              variant="contained"
-              color="primary"
-              size="medium"
-              sx={{
-                fontSize: "1em",
-                padding: "8px 16px",
-              }}
-              onClick={() => handleNavigation(1)}
-              disabled={activeStep === images.length - 1}
-            >
-              Next
-              <KeyboardArrowRight />
-            </Button>
-          }
-          backButton={
-            <Button
-              variant="contained"
-              color="primary"
-              size="medium"
-              sx={{
-                fontSize: "1em",
-                padding: "8px 16px",
-              }}
-              onClick={() => handleNavigation(-1)}
-              disabled={activeStep === 0}
-            >
-              <KeyboardArrowLeft />
-              Back
-            </Button>
-          }
-          sx={{
-            backgroundColor: "rgba(0,0,0,0.7)",
-          }}
-        />
       </Box>
     </Box>
   );

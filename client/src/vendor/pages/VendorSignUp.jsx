@@ -33,7 +33,7 @@ export default function VendorSignUp() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: "secondary" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -41,25 +41,15 @@ export default function VendorSignUp() {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
+                required
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
                 autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -102,7 +92,7 @@ export default function VendorSignUp() {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="/vendorlogin" variant="body2" color="secondary">
+              <Link href="/vendorlogin" variant="body2" color="primary">
                 Already have an account? Sign in
               </Link>
             </Grid>

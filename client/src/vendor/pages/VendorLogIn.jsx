@@ -33,7 +33,7 @@ export default function VendorLogIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: "secondary" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -75,12 +75,12 @@ export default function VendorLogIn() {
           <Grid container>
             <Grid item xs>
               {/* Forget password is not functional yet; may be removed */}
-              <Link href="/resetpassword" variant="body2" color="secondary">
+              <Link href="/resetpassword" variant="body2" color="primary">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item alignContent="center">
-              <Link href="/vendorsignup" variant="body2" color="secondary">
+              <Link href="/vendorsignup" variant="body2" color="primary">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

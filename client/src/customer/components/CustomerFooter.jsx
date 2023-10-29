@@ -1,83 +1,75 @@
-import { Grid, ListItemButton, ListItemText, Typography } from "@mui/material";
 import React from "react";
+import { Grid, ListItemButton, ListItemText, Typography } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import PhoneIcon from "@mui/icons-material/Phone";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
 import { Link } from "react-router-dom";
 
 export default function CustomerFooter() {
   const footerStyles = {
     root: {
-      backgroundColor: "#000",
+      backgroundColor: "#000", // Updated background color
       color: "#fff",
-      padding: "16px",
+      padding: "24px 16px", // Adjusted padding
+      textAlign: "center",
     },
     column: {
       display: "flex",
       flexDirection: "column",
+      alignItems: "center",
     },
-    link: {
-      marginBottom: "8px",
+    contactInfo: {
+      display: "flex",
+      alignItems: "center",
+      margin: "8px 0",
+    },
+    socialIcons: {
+      fontSize: 24, // Increased icon size
+      color: "#fff",
+      margin: "0 12px", // Adjusted margin
+    },
+    copyright: {
+      marginTop: "16px", // Adjusted margin
     },
   };
+
   return (
     <div style={footerStyles.root}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} style={footerStyles.column}>
-          <ListItemButton divider component={Link} to="/faq">
-            <ListItemText primary="FAQ" sx={{ textAlign: "center" }} />
-          </ListItemButton>
+        <Grid item xs={12} sm={12} style={footerStyles.column}>
           <ListItemButton divider component={Link} to="/aboutus">
-            <ListItemText primary="About Us" sx={{ textAlign: "center" }} />
+            <ListItemText primary="About Us" />
           </ListItemButton>
-          <ListItemButton divider component={Link} to="/contactus">
-            <ListItemText primary="Contact Us" sx={{ textAlign: "center" }} />
-          </ListItemButton>
-          <ListItemButton divider component={Link} to="vendorsite">
-            <ListItemText primary="Vendor Site" sx={{ textAlign: "center" }} />
-          </ListItemButton>
-        </Grid>
-        <Grid item xs={12} sm={6} style={footerStyles.column}>
           <ListItemButton divider component={Link} to="/account">
-            <ListItemText primary="ACCOUNT" sx={{ textAlign: "center" }} />
+            <ListItemText primary="Account" />
           </ListItemButton>
-          <ListItemButton divider component={Link} to="/privacypolicy">
-            <ListItemText
-              primary="Privacy Policy"
-              sx={{ textAlign: "center" }}
-            />
-          </ListItemButton>
-          <ListItemButton divider component={Link} to="/termsconditions">
-            <ListItemText
-              primary="Terms & Conditions"
-              sx={{ textAlign: "center" }}
-            />
-          </ListItemButton>
+          <div style={footerStyles.contactInfo}>
+            <MailOutlineIcon />
+            <Typography variant="overline" sx={{ marginLeft: 1 }}>
+              customersupport@beeline.com
+            </Typography>
+          </div>
+          <div style={footerStyles.contactInfo}>
+            <PhoneIcon />
+            <Typography variant="overline" sx={{ marginLeft: 1 }}>
+              +65 6123 4567
+            </Typography>
+          </div>
+          <Typography variant="overline" sx={footerStyles.copyright}>
+            &copy; 2023 BEELINE ALL RIGHTS RESERVED
+          </Typography>
+          {/* <Typography variant="caption">
+            Follow us on{" "}
+            <Link to="/">
+              <InstagramIcon sx={footerStyles.socialIcons} />
+            </Link>{" "}
+            and{" "}
+            <Link to="/">
+              <FacebookIcon sx={footerStyles.socialIcons} />
+            </Link>
+          </Typography> */}
         </Grid>
-      </Grid>
-      <Grid align="center">
-        {/* <Typography>
-          Contact Us: Email: customersupport@foodsite.com | Phone:
-          1-800-123-4567
-        </Typography>
-        <Typography>
-          Order Tracking: Track your order | View order history
-        </Typography>
-        <Typography>
-          Delivery Information: Delivery Areas | Delivery Times | Delivery
-          Charges
-        </Typography>
-        <Typography>
-          Payment Methods: We accept Visa, Mastercard, PayPal, and Cash on
-          Delivery
-        </Typography>
-        <Typography>
-          Customer Reviews: Read our customer reviews | Submit a review
-        </Typography> */}
-        <Typography
-          variant="overline"
-          align="center"
-          sx={{ textAlign: "center", alignContent: "center" }}
-        >
-          COPYRIGHT BEELINE ALL RIGHTS RESERVED
-        </Typography>
       </Grid>
     </div>
   );
